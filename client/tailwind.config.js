@@ -14,7 +14,8 @@ export default {
         "accent-teal-300": "#b2f7ef", 
         "border": "#e5e5e5", 
         "text": "#181823",
-        "accent-gray": "#606470" 
+        "accent-gray": "#606470",
+        "accent-lightgray": "#ced4da" 
       },
       fontFamily: {
         smooch: ['Smooch Sans', 'sans-serif'],

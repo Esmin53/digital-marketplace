@@ -2,6 +2,7 @@ import { FaRegCircleUser, FaCartShopping, FaChevronDown  } from "react-icons/fa6
 import { FaSearch } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import MaxWidthWrapper from "./MaxWidthWrapper";
+import { Link } from "react-router-dom";
 
 
 const Navbar = () => {
@@ -11,9 +12,9 @@ const Navbar = () => {
   return (
         <MaxWidthWrapper className="bg-secondary shadow-sm">
         <div className="w-full max-w-7xl h-14 md:h-16 flex gap-6 items-center">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-accent-teal font-smooch">
+            <Link to={'/'} className="text-3xl sm:text-4xl md:text-5xl font-bold text-accent-teal font-smooch">
                 DigiSeal
-            </h1>
+            </Link>
             <div className="flex-1 hidden md:flex gap-6 items-center">
             <div className="w-72 h-10 flex">
                 <input className="flex-1 border border-r-0 border-accent-teal rounded-bl-lg rounded-tl-lg px-2 outline-none" placeholder="Search" />
