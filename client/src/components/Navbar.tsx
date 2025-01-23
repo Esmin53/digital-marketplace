@@ -17,7 +17,7 @@ const Navbar = () => {
             <div className="flex-1 hidden md:flex gap-6 items-center">
             <div className="w-72 h-10 flex">
                 <input className="flex-1 border border-r-0 border-accent-teal rounded-bl-lg rounded-tl-lg px-2 outline-none" placeholder="Search" />
-                <button className="h-10 w-10 bg-accent-teal rounded-tr-lg rounded-br-lg flex items-center justify-center">
+                <button className="h-10 w-10 bg-accent-teal rounded-tr-lg rounded-br-lg flex items-center justify-center" aria-label="Search">
                     <FaSearch className="text-xl text-white" />
                 </button>
             </div>
