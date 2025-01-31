@@ -30,7 +30,7 @@ const Navbar = () => {
             </div>
             <div className="flex h-full items-center ml-auto gap-3">
                 {user === null ? <div className="flex items-center gap-8 text-text font-rubik">
-                    <p className="cursor-pointer">Register</p>
+                    <Link to={'/register'} className="cursor-pointer">Register</Link>
                     <p className="cursor-pointer">Sign In</p>
                 </div> : <FaRegCircleUser className="text-xl"/>}
                 <div className="h-8 w-[0.75px] bg-accent-teal/70 shadow"/> 
