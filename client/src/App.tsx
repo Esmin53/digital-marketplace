@@ -6,6 +6,7 @@ import Checkout from "./pages/Checkout"
 import NotFound from "./pages/NotFound"
 import Register from "./pages/Register"
 import Login from "./pages/Login"
+import NewProduct from "./pages/NewProduct"
 
 function App() {
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<ProductList />} />
         <Route path="/products/:id" element={<ProductDetail />} />
+        <Route path="/new-product" element={<NewProduct />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />

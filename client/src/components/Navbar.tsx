@@ -3,11 +3,15 @@ import { FaSearch } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { Link } from "react-router-dom";
+import { useAuthStore } from "../store/useAuthStore";
+import { useState } from "react";
 
 
 const Navbar = () => {
 
-    let user = null
+    let { currentUser } = useAuthStore()
+
+    const [isOpen, setIsOpen] = useState<boolean >(false)
 
   return (
         <MaxWidthWrapper className="bg-secondary shadow-sm">
@@ -29,10 +33,20 @@ const Navbar = () => {
                 </p>
             </div>
             <div className="flex h-full items-center ml-auto gap-3">
-                {user === null ? <div className="flex items-center gap-8 text-text font-rubik">
+                {currentUser === null ? <div className="flex items-center gap-8 text-text font-rubik">
                     <Link to={'/register'} className="cursor-pointer">Register</Link>
                     <p className="cursor-pointer">Sign In</p>
-                </div> : <FaRegCircleUser className="text-xl"/>}
+                </div> : <div className="relative">
+                    <FaRegCircleUser className="text-2xl text-text cursor-pointer" onClick={() => setIsOpen(prev => !prev)}/>
+                    {isOpen ? <div className='absolute top-full right-2 translate-y-1 w-52 bg-primary shadow-sm border border-border rounded z-50 flex flex-col p-2 gap-2 2xl:left-1/2 2xl:-translate-x-1/2'>
+                       <Link to='/new-product' className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
+                        hover:bg-primary hover:shadow-sm hover:rounded-sm' >Upload a product</Link>
+                       <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
+                        hover:bg-primary hover:shadow-sm hover:rounded-sm' >Update your profile</p>
+                       <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
+                        hover:bg-primary hover:shadow-sm hover:rounded-sm' >Sign Out</p>
+                    </div> : null}
+                </div>}
                 <div className="h-8 w-[0.75px] bg-accent-teal/70 shadow"/> 
                 <FaCartShopping className="text-2xl text-accent-teal cursor-pointer"/>
             </div>

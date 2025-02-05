@@ -1,5 +1,6 @@
 import { HiMiniArrowRight } from "react-icons/hi2";
 import MaxWidthWrapper from "./MaxWidthWrapper";
+import { Link } from "react-router-dom";
 
 const Banner = () => {
   return (
@@ -9,9 +10,9 @@ const Banner = () => {
             <h1 className='text-center sm:text-start text-4xl lg:text-5xl font-bold font-smooch'>Worlds Best <span className='text-accent-teal'>Digital Marketplace</span> <br />For Icons, Fonts, Music and <br /> <span className='text-accent-teal'>much more!</span></h1>
             <p className='font-medium text-sm lg:text-base font-rubik text-gray-600'>World of digital assets, just one click away from you.</p>
             <div className='flex gap-4 xl:gap-6'>
-                <button className='px-3 h-8 md:w-28 lg:w-32 md:h-9 lg:h-10 rounded-full bg-accent-teal shadow-sm text-primary font-smooch sm:text-lg md:text-xl font-semibold'>
+                <Link to='/new-product' className='px-3 h-8 md:w-28 lg:w-32 md:h-9 lg:h-10 rounded-full bg-accent-teal shadow-sm text-primary font-smooch sm:text-lg md:text-xl font-semibold flex items-center justify-center'>
                     Start Selling
-                </button>
+                </Link>
                 <button className='px-3 h-8 lg:w-32 md:h-9 lg:h-10 rounded-full border-2 border-accent-teal shadow-sm text-accent-teal flex items-center justify-center gap-1'>
                     <p className='sm:text-lg md:text-xl font-smooch font-semibold'>Explore Now</p>
                     <HiMiniArrowRight className='text-xl'/>
