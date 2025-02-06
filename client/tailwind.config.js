@@ -15,7 +15,8 @@ export default {
         "border": "#e5e5e5", 
         "text": "#181823",
         "accent-gray": "#606470",
-        "accent-lightgray": "#ced4da" 
+        "accent-lightgray": "#ced4da", 
+        "button": "#216869" 
       },
       fontFamily: {
         smooch: ['Smooch Sans', 'sans-serif'],

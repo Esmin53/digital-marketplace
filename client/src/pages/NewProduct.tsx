@@ -13,6 +13,7 @@ import {Toaster, toast} from "sonner"
 import MaxWidthWrapper from "../components/MaxWidthWrapper"
 import { CATEGORIES_ENUM, SUBCATEGORIES_ENUM } from "../../../shared/constants/enums";
 import { LuLoaderCircle } from "react-icons/lu"
+import axios from "axios"
 
 type CategoryEnum = typeof CATEGORIES_ENUM[number]
 type SubcategoryEnum = typeof SUBCATEGORIES_ENUM[number]
@@ -26,6 +27,8 @@ const SUBCATEGORIES = CATEGORIES.map((item) => {
 const NewProduct = () => {
 
     const {currentUser} = useAuthStore()
+    const navigate = useNavigate()
+
     const redirect = useNavigate()
     const [isCategoriesOpen, setIsCategoriesOpen] = useState<boolean >(false)
     const [isSubCategoriesOpen, setIsSubCategoriesOpen] = useState<boolean >(false)
@@ -41,7 +44,7 @@ const NewProduct = () => {
             register,
             handleSubmit,
             watch,
-            setError,
+            reset,
             setValue,
             formState: { errors }
         } = useForm<TProductValidator>({
@@ -76,34 +79,45 @@ const NewProduct = () => {
           }
           console.log(title, description, price, category, subCategory, files, cover_images)
           
-          /*const response = await axios.post(`http://localhost:5000/api/v1/product/new-product`, {
+          const response = await axios.post(`http://localhost:5001/api/v1/product/new-product`, {
             title,
             description,
             price,
             category,
             subCategory,
-            cover_images,
+            images: cover_images,
             files
-          })
+          }, {
+            headers: {
+                Authorization: `Bearer ${currentUser?.token}`
+            }
+          }
+        )
     
           if(response.status === 200) {
-            toast.success('Book added succesfully!')
-            //reset({})
+            toast.success('Product added succesfully! You will be redirected shortly.')
+              reset({
+                title: "",
+                price: 0,
+                description: "",
+                category: undefined,
+                subCategory: undefined
+              })
               setImages([])
               setFile([])
  
-            
+              navigate(`/products/${response.data.productId}`)
               return
           }
     
           if(response.status === 400) {
-            toast.error(data.message)
-          }*/
+            toast.error(response.data.message)
+          }
     
     
     
         } catch (error) {
-          toast.error('There was an error adding this book to the database. Please try again.')
+          toast.error('There was an error adding this product to the database. Please try again.')
           console.log(error)
         } finally {
           setIsLoading(false)
@@ -136,9 +150,9 @@ const NewProduct = () => {
                         <input className="w-full h-12 rounded shadow-sm border border-accent-lightgray bg-primary px-2 outline-secondary" placeholder="Your products title" {...register("title")}/>
                         {errors.title ? <p className="text-xs text-red-400">{errors.title.message}</p> : null}
                     </div>
-                    <div className="w-full">
+                    <div className="w-full flex flex-col">
                         <label className="text-sm">Description</label>
-                        <input className="w-full h-12 rounded shadow-sm border border-accent-lightgray bg-primary px-2 outline-secondary" placeholder="More about your product" {...register("description")}/>
+                        <textarea className="w-full h-52 md:h-64 rounded shadow-sm border border-accent-lightgray bg-primary px-2 outline-secondary" placeholder="More about your product" {...register("description")}/>
                         {errors.description ? <p className="text-xs text-red-400">{errors.description.message}</p> : null}
                     </div>
                     <div className="w-full">
@@ -161,7 +175,10 @@ const NewProduct = () => {
                         </div>
                     {isCategoriesOpen ? <div className='absolute top-full right-2 translate-y-1 w-full bg-primary shadow-sm border border-border rounded z-50 flex flex-col p-2 gap-2 2xl:left-1/2 2xl:-translate-x-1/2'>
                        {CATEGORIES.map((item) => <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
-                        hover:bg-primary hover:shadow-sm hover:rounded-sm flex items-center gap-1' onClick={() => setValue("category", item.slug as CategoryEnum)}>
+                        hover:bg-primary hover:shadow-sm hover:rounded-sm flex items-center gap-1' key={item.id} onClick={() => {
+                          setValue("category", item.slug as CategoryEnum)
+                          setIsCategoriesOpen(prev => false)
+                          }}>
                           {item.name}
                           {watch("category") === item.slug ? <FaCheckDouble /> : null}
                           </p>)}
@@ -181,7 +198,10 @@ const NewProduct = () => {
                         </div>
                     {isSubCategoriesOpen ? <div className='absolute top-full right-2 translate-y-1 w-full bg-primary shadow-sm border border-border rounded z-50 flex flex-col p-2 gap-2 2xl:left-1/2 2xl:-translate-x-1/2 max-h-56 overflow-y-scroll'>
                         {SUBCATEGORIES.map((item) => <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
-                        hover:bg-primary hover:shadow-sm hover:rounded-sm flex items-center gap-1' onClick={() => setValue("subCategory", item.slug as SubcategoryEnum)}>   {item.name}
+                        hover:bg-primary hover:shadow-sm hover:rounded-sm flex items-center gap-1' key={item.id} onClick={() => {
+                          setValue("subCategory", item.slug as SubcategoryEnum)
+                            setIsSubCategoriesOpen(prev => false)
+                          }}>   {item.name}
                           {watch("subCategory") === item.slug ? <FaCheckDouble /> : null}
                         </p>)}
                     </div> : null}
@@ -220,7 +240,7 @@ const NewProduct = () => {
               {errors.files ? <p className='text-xs text-red-500'>{errors.files?.message}</p> : null}
           </div>
    
-                <button className="w-full h-12 bg-[#216869] shadow text-white flex items-center justify-center rounded-sm my-2">
+                <button className="w-full h-12 bg-button hover:bg-button/90 shadow text-white flex items-center justify-center rounded-sm my-2">
                     {isLoading ? <LuLoaderCircle className="text-xl sm:text-2xl animate-spin"/> : "Submit"}
                 </button>
                 </form>

@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 
-const supabaseUrl = 'https://ziilfxkhmjlollmbngum.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InppaWxmeGtobWpsb2xsbWJuZ3VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYwMTQ0NTMsImV4cCI6MjA1MTU5MDQ1M30.HqjlkWC6pohtvSJQj2fsLH4O0GeptrN9xRhsOt2HByI'
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function uploadFile(file: File, folder: string) {
