@@ -2,9 +2,11 @@ import Card from './Card'
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { IoChevronUp } from "react-icons/io5";
 import { HiMiniArrowRight } from "react-icons/hi2";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CATEGORIES } from '../lib/data';
-
+import axios from "axios"
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 const Popular = () => {
     const [isOpen, setIsOpen]  = useState<boolean >(false)
@@ -13,10 +15,60 @@ const Popular = () => {
         name: string;
         slug: string;
     }>(CATEGORIES[0])
+    const [data, setData] = useState<{
+        price: number
+        _id: string
+        title: string
+        authorId: {
+          _id: string
+          username: string
+        }
+        images: string[]
+        averageRating: number
+      }[]>([])
+
+      const responsive = {
+        superLargeDesktop: {
+          // the naming can be any, depends on you.
+          breakpoint: { max: 4000, min: 3000 },
+          items: 5
+        },
+        desktop: {
+          breakpoint: { max: 3000, min: 1024 },
+          items: 5
+        },
+        tablet: {
+          breakpoint: { max: 1024, min: 768 },
+          items: 4
+        },
+        mobile: {
+          breakpoint: { max: 768, min: 640 },
+          items: 3
+        },
+        mobilesm: {
+          breakpoint: { max: 640, min: 455 },
+          items: 2
+        },
+        mobilexs: {
+          breakpoint: { max: 455, min: 0 },
+          items: 1
+        },
+      };
+    
+
+    const getProducts = async () => {
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products`)
+    
+        setData(response.data.products)
+      }
+  
+      useEffect(() => {
+        getProducts()
+      }, [])
 
   return (
     <MaxWidthWrapper className='bg-secondary font-rubik text-text'>
-        <div className='flex flex-col py-6 lg:py-8 xl:py-10 gap-6 lg:gap-10 w-full'>
+        <div className='flex flex-col py-6 w-full'>
             <div className='w-full flex flex-col sm:flex-row items-center justify-between gap-2'>
                 <h1 className='text-2xl lg:text-3xl text-center'>Popular {category.name}</h1>
                 <div className='flex gap-4'>
@@ -39,14 +91,23 @@ const Popular = () => {
                 </button>
             </div>
             </div>
-            <div className="grid place-items-center grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
+            
+            {data.length ? <Carousel 
+            className='py-6 lg:py-10'
+            responsive={responsive}
+            showDots={true}>
+            {data.length && data?.map((item) => <div key={item._id} className='px-2 flex items-center justify-center'>
+                <Card title={item.title} author={item.authorId} _id={item._id} price={item.price} images={item.images} averageRating={item.averageRating} />
+            </div>)}
+            {data.length && data?.map((item) => <div key={item._id} className='px-2 flex items-center justify-center'>
+                <Card title={item.title} author={item.authorId} _id={item._id} price={item.price} images={item.images} averageRating={item.averageRating} />
+            </div>)}
 
-            </div>
+            </Carousel> : null}
+
+
+
+
         </div>
     </MaxWidthWrapper>
   )

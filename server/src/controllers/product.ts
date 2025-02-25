@@ -32,3 +32,16 @@ export const newProduct = async (req: Request, res: Response) => {
         res.status(500).send({success: false, message: "Something went wrong. Please try again."});
     }
 }
+
+export const getProducts = async (req: Request, res: Response) => {
+    try {
+        const products = await Product.find().select('title price _id authorId images averageRating').limit(5).populate('authorId', 'username id')
+        
+        
+        res.status(200).json({products});
+              
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+    }
+}

@@ -38,7 +38,7 @@ const ProductDetail = () => {
           <div className="w-full flex flex-col gap-2 sm:gap-4">
             <h2 className="font-medium text-xl md:text-2xl">Similar Products</h2>
             <div className="grid place-items-center grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-                <Card />
+                {/*<Card /> */}
             </div>
           </div>
         </div>

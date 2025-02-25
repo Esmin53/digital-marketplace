@@ -1,10 +1,34 @@
 import { useState } from "react";
-import { FaRegStar, FaStar } from "react-icons/fa6";
+import { FaRegStar, FaStar, FaStarHalf } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
-const Card = () => {
+interface CardProps {
+  price: number
+  _id: string
+  title: string
+  author: {
+    _id: string
+    username: string
+  }
+  images: string[]
+  averageRating: number
+}
+
+const Card = ({_id, images, title, author, price, averageRating}: CardProps) => {
   const [isFav, setIsFav] = useState<boolean >(false)
   const navigate = useNavigate();
+  const fullStars = Math.floor(averageRating)
+  const hasHalfStar = averageRating % 1 !== 0;
+
+  const stars = [];
+
+  for (let i = 0; i < fullStars; i++) {
+    stars.push(<FaRegStar className="text-accent-teal" key={`star-${i}`} />);
+  }
+
+  if (hasHalfStar) {
+    stars.push(<FaStarHalf className="text-accent-teal"  key="half-star" />);
+  }
 
   return (
     <div className='max-w-80 w-full overflow-hidden font-rubik relative flex flex-col'>
@@ -13,22 +37,18 @@ const Card = () => {
         </div>
         <div className="w-full aspect-square relative rounded-xl overflow-hidden shadow">
           <div className="min-w-24 px-2 h-7 bg-accent-teal absolute bottom-0 right-0 z-40 rounded-tl-md flex items-center justify-center">
-            <p className="text-primary">$ <span>4.75</span></p>
+            <p className="text-primary">$ <span>{price}</span></p>
           </div>
-            <img src="https://img.freepik.com/free-vector/white-100-universal-web-icons-set_1057-1119.jpg?t=st=1737605118~exp=1737608718~hmac=49d95bcf0d0f2462e0ad212cf5738b8c3ff1158c6a6ad9e85712f6792bbf8cfd&w=740" className="w-full h-full object-cover z-10"/>
+            <img src={images[0]} className="w-full h-full object-cover z-10"/>
         </div>
-        <div className=" w-full px-2 py-0.5 text-[#1d2529] flex flex-col cursor-pointer -space-y-1" onClick={() => navigate('/products/slug')}>
-            <h1 className="text-lg">Item Title</h1>
+        <div className=" w-full px-2 py-0.5 text-[#1d2529] flex flex-col cursor-pointer -space-y-1" onClick={() => navigate(`/products/${_id}`)}>
+            <h1 className="text-lg">{title}</h1>
             <div className="flex items-center justify-between w-full flex-wrap">
-                <p className="font-medium">Some User</p>
+                <p className="font-medium">{author.username}</p>
                 <div className="flex items-center">
                 <div className="flex items-center gap-0.5">
-                  <FaRegStar className="text-accent-teal" />
-                  <FaRegStar className="text-accent-teal" />
-                  <FaRegStar className="text-accent-teal" />
-                  <FaRegStar className="text-accent-teal" />
+                  {averageRating !== 0 ? stars : <p className="text-accent-gray text-sm">No ratings so far</p>}
                 </div>
-                <p className="text-accent-gray">(15)</p>
                 </div>
             </div>
         </div>
