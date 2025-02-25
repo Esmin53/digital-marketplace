@@ -45,3 +45,16 @@ export const getProducts = async (req: Request, res: Response) => {
         res.status(500).send({success: false, message: "Something went wrong. Please try again."});
     }
 }
+
+export const getProduct = async (req: Request, res: Response) => {
+    try {
+        const { productId } = req.params
+
+        const product = await Product.findById(productId).select('title price _id authorId images averageRating category subCategory description').populate('authorId', 'username id')
+
+        res.status(200).send({succes: true, product: product})
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+    }
+}
