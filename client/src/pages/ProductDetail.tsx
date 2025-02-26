@@ -1,13 +1,11 @@
 import { FaStar, FaStarHalf } from "react-icons/fa6"
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
-import Card from "../components/Card"
-import { ReactNode, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios"
-import { useLocation } from "react-router-dom"
+import { useLocation, useParams } from "react-router-dom"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { IconType } from "react-icons/lib"
 import SimilarProducts from "../components/SimilarProducts"
 
 const ProductDetail = () => {
@@ -25,6 +23,7 @@ const ProductDetail = () => {
     category: string
     subCategory: string
   } | null>(null)
+  const { id } = useParams()
   const [rating, setRating] = useState<JSX.Element[]>([])
 
   const productId = useLocation().pathname.split('/')[2]
@@ -32,7 +31,6 @@ const ProductDetail = () => {
   const getProducts = async () => {
     const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products/${productId}`)
 
-    console.log("Response: ", response.data.product.averageRating)
     setData(response.data.product)
 
     if(true) {
@@ -49,7 +47,6 @@ const ProductDetail = () => {
         stars.push(<FaStarHalf className="text-accent-teal text-2xl"  key="half-star" />);
       }
 
-      console.log(stars)
       setRating(stars)
     }
   }
@@ -59,7 +56,7 @@ const ProductDetail = () => {
 
   useEffect(() => {
     getProducts()
-  }, [])
+  }, [id])
   
 
   return (
