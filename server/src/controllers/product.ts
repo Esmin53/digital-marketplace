@@ -35,10 +35,39 @@ export const newProduct = async (req: Request, res: Response) => {
 
 export const getProducts = async (req: Request, res: Response) => {
     try {
-        const products = await Product.find().select('title price _id authorId images averageRating').limit(5).populate('authorId', 'username id')
+        const subCategory = req.query.subCategory || null
+        const category = req.query.category || null
+        const limit = Number(req.query.limit) || 6
+        const orderBy = req.query.orderBy || 'title-asc'
+        const page = Number(req.query.page) || 1
+
+        let sort: any = {}
+
+        if(orderBy === 'title-asc') {
+           sort.title = "asc"
+        } else if(orderBy === 'title-desc') {
+            sort.title = "desc"
+        } else if(orderBy === 'price-asc') {
+            sort.price = "asc"
+        } else if(orderBy === 'price-desc') {
+            sort.price = "desc"
+        }
+
+        let filters: any = {}
+
+        if(subCategory !== null) filters.subCategory = subCategory as string
+        if(category !== null) filters.category = category as string
+
+        const products = await Product.find().select('title price _id authorId images averageRating').
+        where(filters).
+        limit(limit).
+        skip((page-1) * limit).
+        populate('authorId', 'username id').
+        sort(sort)
         
-        
-        res.status(200).json({products});
+        const totalResults = await Product.countDocuments().where(filters)
+
+        res.status(200).json({products, totalResults});
               
     } catch (error) {
         console.error(error);

@@ -13,10 +13,10 @@ const Banner = () => {
                 <Link to='/new-product' className='px-3 h-8 md:w-28 lg:w-32 md:h-9 lg:h-10 rounded-full bg-accent-teal shadow-sm text-primary font-smooch sm:text-lg md:text-xl font-semibold flex items-center justify-center'>
                     Start Selling
                 </Link>
-                <button className='px-3 h-8 lg:w-32 md:h-9 lg:h-10 rounded-full border-2 border-accent-teal shadow-sm text-accent-teal flex items-center justify-center gap-1'>
+                <Link to="/products" className='px-3 h-8 lg:w-32 md:h-9 lg:h-10 rounded-full border-2 border-accent-teal shadow-sm text-accent-teal flex items-center justify-center gap-1'>
                     <p className='sm:text-lg md:text-xl font-smooch font-semibold'>Explore Now</p>
                     <HiMiniArrowRight className='text-xl'/>
-                </button>
+                </Link>
             </div>
         </div>
         <div className='flex-1 flex sm:flex-col md:flex-row items-center justify-center'>

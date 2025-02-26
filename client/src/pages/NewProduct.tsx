@@ -79,7 +79,7 @@ const NewProduct = () => {
           }
           console.log(title, description, price, category, subCategory, files, cover_images)
           
-          const response = await axios.post(`http://localhost:5001/api/v1/product/new-product`, {
+          const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/product/new-product`, {
             title,
             description,
             price,

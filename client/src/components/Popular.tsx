@@ -7,6 +7,7 @@ import { CATEGORIES } from '../lib/data';
 import axios from "axios"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { Link } from 'react-router-dom';
 
 const Popular = () => {
     const [isOpen, setIsOpen]  = useState<boolean >(false)
@@ -85,10 +86,10 @@ const Popular = () => {
                         }}>{item.name}</p>)}
                     </div> : null}
                 </div>
-                <button className='px-2 md:w-32 h-8 md:h-10 rounded-full bg-accent-teal-200 shadow text-text font-smooch text-xl font-semibold flex items-center justify-center gap-1'>
+                <Link to={`/products?category=${category.slug}`} className='px-2 md:w-32 h-8 md:h-10 rounded-full bg-accent-teal-200 shadow text-text font-smooch text-xl font-semibold flex items-center justify-center gap-1'>
                     Explore
                     <HiMiniArrowRight />
-                </button>
+                </Link>
             </div>
             </div>
             
