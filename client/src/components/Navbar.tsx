@@ -1,10 +1,11 @@
-import { FaRegCircleUser, FaCartShopping, FaChevronDown  } from "react-icons/fa6";
+import { FaRegCircleUser, FaChevronDown  } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
 import { GiHamburgerMenu } from "react-icons/gi";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { useState } from "react";
+import Cart from "./Cart";
 
 
 const Navbar = () => {
@@ -48,7 +49,7 @@ const Navbar = () => {
                     </div> : null}
                 </div>}
                 <div className="h-8 w-[0.75px] bg-accent-teal/70 shadow"/> 
-                <FaCartShopping className="text-2xl text-accent-teal cursor-pointer"/>
+                <Cart />
             </div>
             </div>
 

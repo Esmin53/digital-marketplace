@@ -7,6 +7,7 @@ import { useLocation, useParams } from "react-router-dom"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import SimilarProducts from "../components/SimilarProducts"
+import { useCart } from "../store/useCart"
 
 const ProductDetail = () => {
   const [data, setData] = useState<{
@@ -27,6 +28,7 @@ const ProductDetail = () => {
   const [rating, setRating] = useState<JSX.Element[]>([])
 
   const productId = useLocation().pathname.split('/')[2]
+  const {addItem, items, removeItem} = useCart()
 
   const getProducts = async () => {
     const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products/${productId}`)
@@ -51,13 +53,15 @@ const ProductDetail = () => {
     }
   }
 
-
-  console.log(rating.length)
+  let inCart = items.find(({product}) => product._id === data?._id)  || null
 
   useEffect(() => {
     getProducts()
   }, [id])
   
+  if(!data) {
+    return <div></div>
+  }
 
   return (
     <div className='min-h-screen flex flex-col text-text font-rubik'>
@@ -87,7 +91,27 @@ const ProductDetail = () => {
                   {rating.length > 0 ? rating.map((item) => item) : <p className="text-accent-gray">No ratings so far</p>}
                 </div>
               <p className="text-sm sm:text-base pb-4">{data?.description}</p>
-              <button className="w-full max-w-96 rounded-lg py-2 md:py-3 mt-auto mb-2  bg-accent-teal font-medium md:text-lg text-white hover:bg-accent-teal/85">Add to cart</button>
+              {items.some(item => item.product._id === data?._id) ? (
+  <div
+    className="w-full max-w-96 rounded-md py-2 md:py-3 mt-auto mb-2 bg-button md:text-lg text-white hover:bg-button/95 flex items-center justify-center">
+    In Cart
+  </div>
+) : (
+  <button
+    className="w-full max-w-96 rounded-md py-2 md:py-3 mt-auto mb-2 bg-button md:text-lg text-white hover:bg-button/95"
+    onClick={() =>
+      addItem({
+        _id: data?._id,
+        title: data?.title,
+        price: data?.price,
+        image: data?.images[0],
+        author: data?.authorId.username
+      })
+    }
+  >
+    Add to cart
+  </button>
+)}
             </div>
         </div>
         {/* Replace mock data with real related products */}
