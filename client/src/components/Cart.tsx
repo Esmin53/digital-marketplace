@@ -1,13 +1,16 @@
 import  { useState } from 'react'
 import { FaCartShopping, FaX  } from "react-icons/fa6";
 import { useCart } from '../store/useCart';
+import { Link } from 'react-router-dom';
 
 const Cart = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const {items, removeItem} = useCart()
 
-  console.log("Items: ", items)
+  const cartTotal = items.reduce((prev, curr) => {
+    return curr.product.price + prev
+  }, 0)
 
   return (
     <div>
@@ -26,7 +29,7 @@ const Cart = () => {
                   </div>
                   <div className='flex-1 flex flex-col justify-evenly'>
                     <h1 className=''>{product.title}</h1>
-                    <p className='font-medium'>$ {product.price}</p>
+                    <p className='font-medium'>$ {product.price.toFixed(2)}</p>
                     <p className='text-sm text-accent-gray/75'>by {product.author}</p>
                   </div>
                </div>)}
@@ -34,17 +37,17 @@ const Cart = () => {
            <div className='mt-auto w-full flex flex-col gap-2 border-t pt-1 border-t-accent-lightgray/75'>
               <div className='w-full flex items-center justify-between'>
                 <p >Total Items</p>
-                <p>3</p>
+                <p>{items.length}</p>
               </div>
               <div className='w-full flex items-center justify-between'>
                 <p >Cart Subtotal</p>
-                <p>32.00 $</p>
+                <p>{cartTotal.toFixed(2)} $</p>
               </div>
               <div className='w-full flex items-center justify-between'>
                 <p className='font-medium'>Cart Total</p>
-                <p>32.00 $</p>
+                <p>{cartTotal.toFixed(2)} $</p>
               </div>
-              <button className='w-full h-10 bg-button text-white rounded-sm shadow'>Checkout</button>
+              <Link to='/checkout' className='w-full h-10 bg-button text-white rounded-sm shadow flex items-center justify-center'>Checkout</Link>
            </div>
         </div> }
     </div>

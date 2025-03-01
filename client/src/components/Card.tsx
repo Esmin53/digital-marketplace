@@ -37,7 +37,7 @@ const Card = ({_id, images, title, author, price, averageRating}: CardProps) => 
         </div>
         <div className="w-full aspect-square relative rounded-xl overflow-hidden shadow">
           <div className="min-w-24 px-2 h-7 bg-accent-teal absolute bottom-0 right-0 z-40 rounded-tl-md flex items-center justify-center">
-            <p className="text-primary">$ <span>{price}</span></p>
+            <p className="text-primary">$ <span>{price.toFixed(2)}</span></p>
           </div>
             <img src={images[0]} className="w-full h-full object-cover z-10"/>
         </div>

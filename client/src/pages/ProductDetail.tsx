@@ -28,7 +28,7 @@ const ProductDetail = () => {
   const [rating, setRating] = useState<JSX.Element[]>([])
 
   const productId = useLocation().pathname.split('/')[2]
-  const {addItem, items, removeItem} = useCart()
+  const {addItem, items} = useCart()
 
   const getProducts = async () => {
     const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products/${productId}`)
@@ -52,8 +52,6 @@ const ProductDetail = () => {
       setRating(stars)
     }
   }
-
-  let inCart = items.find(({product}) => product._id === data?._id)  || null
 
   useEffect(() => {
     getProducts()
@@ -85,7 +83,7 @@ const ProductDetail = () => {
               <h1 className="text-5xl md:text-6xl font-bold font-smooch">{data?.title}</h1>
               <p className="text-sm font-medium">By {data?.authorId.username}</p>
               <p className="text-4xl md:text-5xl font-bold font-smooch">
-                $ {data?.price}
+                $ {data?.price.toFixed(2)}
               </p>
                 <div className="flex items-center py-2">
                   {rating.length > 0 ? rating.map((item) => item) : <p className="text-accent-gray">No ratings so far</p>}
