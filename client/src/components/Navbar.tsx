@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { useState } from "react";
 import Cart from "./Cart";
+import MobileNavigation from "./MobileNavigation";
 
 
 const Navbar = () => {
@@ -20,20 +21,20 @@ const Navbar = () => {
             <Link to={'/'} className="text-3xl sm:text-4xl md:text-5xl font-bold text-accent-teal font-smooch">
                 DigiSeal
             </Link>
-            <div className="flex-1 hidden md:flex gap-6 items-center">
-            <div className="w-72 h-10 flex">
+            <div className="flex-1 flex gap-6 items-center">
+            <div className="w-72 h-10 hidden md:flex">
                 <input className="flex-1 border border-r-0 border-accent-teal rounded-bl-lg rounded-tl-lg px-2 outline-none" placeholder="Search" />
                 <button className="h-10 w-10 bg-accent-teal rounded-tr-lg rounded-br-lg flex items-center justify-center" aria-label="Search">
                     <FaSearch className="text-xl text-white" />
                 </button>
             </div>
-            <div className="relative">
+            <div className="relative hidden md:flex">
                 <p className="flex items-center gap-2 font-rubik cursor-pointer">
                     Categories
                     <FaChevronDown />
                 </p>
             </div>
-            <div className="flex h-full items-center ml-auto gap-3">
+            <div className="flex h-full items-center ml-auto gap-3 z-50">
                 {currentUser === null ? <div className="flex items-center gap-8 text-text font-rubik">
                     <Link to={'/register'} className="cursor-pointer">Register</Link>
                     <p className="cursor-pointer">Sign In</p>
@@ -53,8 +54,7 @@ const Navbar = () => {
             </div>
             </div>
 
-            {/* MOBILE NAVIGATION */}
-            <GiHamburgerMenu className="flex md:hidden text-2xl ml-auto"/>
+
         </div>
         </MaxWidthWrapper>
   )
