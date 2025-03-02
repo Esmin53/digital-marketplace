@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react';
 import axios from "axios"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import SkeletonCard from './SkeletonCard';
 
 const SimilarProducts = () => {
-
+    const [isLoading, setIsLoading] = useState<boolean >(true)
     const [data, setData] = useState<{
         price: number
         _id: string
@@ -48,9 +49,16 @@ const SimilarProducts = () => {
     
 
     const getProducts = async () => {
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products`)
+        setIsLoading(true)
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products`)
     
-        setData(response.data.products)
+          setData(response.data.products)
+        } catch (error) {
+          
+        } finally {
+          setIsLoading(false)
+        }
       }
   
       useEffect(() => {
@@ -60,16 +68,21 @@ const SimilarProducts = () => {
   return (
         <div className='flex flex-col py-6 w-full md:pb-8 lg:pb-12'>
             <h2 className="font-medium text-xl md:text-2xl">Similar Products</h2>
-            {data.length ? <Carousel className='py-6 lg:py-10'
+            {isLoading ? <Carousel className='py-6 lg:py-10'
+            responsive={responsive}
+            showDots={true}>
+              <SkeletonCard className='px-2' />
+              <SkeletonCard className='px-2' />
+              <SkeletonCard className='px-2' />
+              <SkeletonCard className='px-2' />
+              <SkeletonCard className='px-2' />
+            </Carousel> : null}
+            {data.length && !isLoading ? <Carousel className='py-6 lg:py-10'
             responsive={responsive}
             showDots={true}>
             {data.length && data?.map((item) => <div key={item._id} className='px-2 flex items-center justify-center'>
                 <Card title={item.title} author={item.authorId} _id={item._id} price={item.price} images={item.images} averageRating={item.averageRating} />
             </div>)}
-            {data.length && data?.map((item) => <div key={item._id} className='px-2 flex items-center justify-center'>
-                <Card title={item.title} author={item.authorId} _id={item._id} price={item.price} images={item.images} averageRating={item.averageRating} />
-            </div>)}
-
             </Carousel> : null}
         </div>
 

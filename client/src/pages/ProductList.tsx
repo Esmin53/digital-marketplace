@@ -10,6 +10,7 @@ import { Link, useSearchParams } from "react-router-dom"
 import axios from "axios"
 import Pagination from "../components/Pagination"
 import { SiGhostery } from "react-icons/si";
+import SkeletonCard from "../components/SkeletonCard"
 
 
 const ProductList = () => {
@@ -153,7 +154,13 @@ const ProductList = () => {
 
                   </div>
               </div>
-              <Products products={data}/>
+              {isLoading ? <div className="w-full max-w-7xl py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 place-items-center gap-4 gap-y-6 px-2">
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+                <SkeletonCard />
+              </div> : null}
+              {!isLoading ? <Products products={data}/> : null}
               {!isLoading && totalResults === 0 ? <div className="w-full h-full flex flex-col items-center justify-center gap-2 min-h-96 px-2">
                 <SiGhostery className="text-accent-gray/50 text-6xl" />
                 <p className="text-3xl sm:text-4xl text-accent-gray/70 font-smooch text-center">Nothing here... Try a different search!</p>

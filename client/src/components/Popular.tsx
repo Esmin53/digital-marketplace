@@ -8,8 +8,10 @@ import axios from "axios"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Link } from 'react-router-dom';
+import SkeletonCard from './SkeletonCard';
 
 const Popular = () => {
+  const [isLoading, setIsLoading] = useState<boolean >(true)
     const [isOpen, setIsOpen]  = useState<boolean >(false)
     const [category, setCategory] = useState<{
         id: number
@@ -58,9 +60,16 @@ const Popular = () => {
     
 
     const getProducts = async () => {
+      setIsLoading(true)
+      try {
         const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products`)
-    
+  
         setData(response.data.products)
+      } catch (error) {
+        
+      } finally {
+        setIsLoading(false)
+      }
       }
   
       useEffect(() => {
@@ -92,23 +101,23 @@ const Popular = () => {
                 </Link>
             </div>
             </div>
-            
-            {data.length ? <Carousel 
+            {isLoading ? <Carousel className='py-6 lg:py-10'
+            responsive={responsive}
+            showDots={true}>
+              <SkeletonCard className='px-2' />
+              <SkeletonCard className='px-2' />
+              <SkeletonCard className='px-2' />
+              <SkeletonCard className='px-2' />
+              <SkeletonCard className='px-2' />
+            </Carousel> : null}
+            {data.length && !isLoading ? <Carousel 
             className='py-6 lg:py-10'
             responsive={responsive}
             showDots={true}>
             {data.length && data?.map((item) => <div key={item._id} className='px-2 flex items-center justify-center'>
                 <Card title={item.title} author={item.authorId} _id={item._id} price={item.price} images={item.images} averageRating={item.averageRating} />
             </div>)}
-            {data.length && data?.map((item) => <div key={item._id} className='px-2 flex items-center justify-center'>
-                <Card title={item.title} author={item.authorId} _id={item._id} price={item.price} images={item.images} averageRating={item.averageRating} />
-            </div>)}
-
             </Carousel> : null}
-
-
-
-
         </div>
     </MaxWidthWrapper>
   )
