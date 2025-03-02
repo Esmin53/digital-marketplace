@@ -25,7 +25,7 @@ const Login = () => {
                 return
             }
 
-            await axios.post(`http://localhost:5000/api/v1/auth/login`, {username, password}).then((res) => {
+            await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/login`, {username, password}).then((res) => {
             setIsLoading(false)    
             if(res.status === 200) {
                     signIn(res.data)

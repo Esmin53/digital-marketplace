@@ -1,12 +1,10 @@
 import { FaRegCircleUser, FaChevronDown  } from "react-icons/fa6";
 import { FaSearch } from "react-icons/fa";
-import { GiHamburgerMenu } from "react-icons/gi";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { useState } from "react";
 import Cart from "./Cart";
-import MobileNavigation from "./MobileNavigation";
 
 
 const Navbar = () => {
@@ -43,8 +41,8 @@ const Navbar = () => {
                     {isOpen ? <div className='absolute top-full right-2 translate-y-1 w-52 bg-primary shadow-sm border border-border rounded z-50 flex flex-col p-2 gap-2 2xl:left-1/2 2xl:-translate-x-1/2'>
                        <Link to='/new-product' className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
                         hover:bg-primary hover:shadow-sm hover:rounded-sm' >Upload a product</Link>
-                       <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
-                        hover:bg-primary hover:shadow-sm hover:rounded-sm' >Update your profile</p>
+                       <Link to={'/my-profile'} className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
+                        hover:bg-primary hover:shadow-sm hover:rounded-sm' >My profile</Link>
                        <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
                         hover:bg-primary hover:shadow-sm hover:rounded-sm' >Sign Out</p>
                     </div> : null}

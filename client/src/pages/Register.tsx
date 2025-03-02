@@ -36,7 +36,7 @@ const Register = () => {
             }
             setIsLoading(true)
 
-            const response = await axios.post(`http://localhost:5000/api/v1/auth/register`, {username, password})
+            const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/register`, {username, password})
             console.log("Response: ", response)
             setIsLoading(false)
             if(response.status === 200) {
