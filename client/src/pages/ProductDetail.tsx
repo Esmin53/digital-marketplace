@@ -1,7 +1,6 @@
-import { FaStar, FaStarHalf } from "react-icons/fa6"
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import axios from "axios"
 import { useLocation, useParams } from "react-router-dom"
 import Carousel from "react-multi-carousel";
@@ -9,9 +8,13 @@ import "react-multi-carousel/lib/styles.css";
 import SimilarProducts from "../components/SimilarProducts"
 import { useCart } from "../store/useCart"
 import SkeletonProductDetail from "../components/SkeletonProductDetail"
+import { useClickOutside } from "../hooks/useOnClickOutside"
+import Ratings from "../components/Ratings"
 
 const ProductDetail = () => {
   const [isLoading, setIsLoading] = useState<boolean >(true)
+  const [isRatingsOpen, setIsRatingsOpen] = useState<boolean >(false)
+
   const [data, setData] = useState<{
     price: number
     _id: string
@@ -27,10 +30,15 @@ const ProductDetail = () => {
     subCategory: string
   } | null>(null)
   const { id } = useParams()
-  const [rating, setRating] = useState<JSX.Element[]>([])
 
   const productId = useLocation().pathname.split('/')[2]
   const {addItem, items} = useCart()
+
+  const ref = useRef<HTMLDivElement>(null)
+  useClickOutside(ref, () => {
+    
+    if(isRatingsOpen) setIsRatingsOpen(false)
+  })
 
   const getProducts = async () => {
     setIsLoading(true)
@@ -39,22 +47,6 @@ const ProductDetail = () => {
 
       setData(response.data.product)
   
-      if(true) {
-        const fullStars = Math.floor(response.data?.product.averageRating )
-        const hasHalfStar = response.data.product.averageRating  % 1 !== 0;
-      
-        const stars = [];
-      
-        for (let i = 0; i < fullStars; i++) {
-          stars.push(<FaStar className="text-accent-teal text-2xl" key={`star-${i}`} />);
-        }
-      
-        if (hasHalfStar) {
-          stars.push(<FaStarHalf className="text-accent-teal text-2xl"  key="half-star" />);
-        }
-  
-        setRating(stars)
-      }
     } catch (error) {
       
     } finally {
@@ -94,9 +86,7 @@ const ProductDetail = () => {
               <p className="text-4xl md:text-5xl font-bold font-smooch">
                 $ {data?.price.toFixed(2)}
               </p>
-                <div className="flex items-center py-2">
-                  {rating.length > 0 ? rating.map((item) => item) : <p className="text-accent-gray">No ratings so far</p>}
-                </div>
+              <Ratings initialAverageRating={data.averageRating} productId={data._id}/>
               <p className="text-sm sm:text-base pb-4">{data?.description}</p>
               {items.some(item => item.product._id === data?._id) ? (
                 <div

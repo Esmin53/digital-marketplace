@@ -87,3 +87,69 @@ export const getProduct = async (req: Request, res: Response) => {
         res.status(500).send({success: false, message: "Something went wrong. Please try again."});
     }
 }
+
+export const getUsersRating = async (req: Request, res: Response) => {
+    try {
+        const { productId } = req.params
+
+        const {id} = res.locals.user
+    
+        const userRating = await Product.findById(productId).select('ratings')
+
+        const prevRating = userRating?.ratings?.find((item) => item.userId === id) || null
+        
+        res.status(200).send({succes: true, rating: prevRating})
+    } catch (error) {
+        res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+    }
+}
+
+export const rateProduct = async (req: Request, res: Response) => {
+    try {
+        const { productId } = req.params
+
+        let {rating} = req.body
+        
+        const {id} = res.locals.user
+
+        const product = await Product.findById(productId).select('averageRating ratings')
+
+        let tempRatings = product?.ratings || []
+
+        let averageRating = product?.averageRating
+
+        let usersPrevRating = tempRatings?.find((item) => item.userId === id) || null
+
+        if(usersPrevRating === null) {
+            tempRatings?.push({
+                userId: id,
+                rating
+            })
+
+        } else if(usersPrevRating) {
+            tempRatings = tempRatings?.filter((item) => item.userId !== id)
+
+            tempRatings.push({
+                userId: id,
+                rating
+            })
+        }
+
+        averageRating = tempRatings?.reduce((prev, curr) => {
+            return curr.rating + prev
+          }, 0) / tempRatings?.length
+
+        console.log(product)
+
+        await Product.updateOne({
+            averageRating,
+            ratings: tempRatings
+        }).where({_id: productId})
+
+        res.status(200).send({succes: true, newRating: averageRating})
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+    }
+}
