@@ -5,7 +5,12 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import SkeletonCard from './SkeletonCard';
 
-const SimilarProducts = () => {
+interface SimilarProductsProps {
+  subCategory: string
+  _id: string
+}
+
+const SimilarProducts = ({subCategory, _id}: SimilarProductsProps) => {
     const [isLoading, setIsLoading] = useState<boolean >(true)
     const [data, setData] = useState<{
         price: number
@@ -51,9 +56,9 @@ const SimilarProducts = () => {
     const getProducts = async () => {
         setIsLoading(true)
         try {
-          const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products`)
+          const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products?subCategory=${subCategory}`)
     
-          setData(response.data.products)
+          setData(response.data.products.filter((item: {_id: string}) => item._id !== _id))
         } catch (error) {
           
         } finally {
@@ -64,6 +69,10 @@ const SimilarProducts = () => {
       useEffect(() => {
         getProducts()
       }, [])
+
+      if(data.length === 0) {
+        return <div></div>
+      }
 
   return (
         <div className='flex flex-col py-6 w-full md:pb-8 lg:pb-12'>

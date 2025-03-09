@@ -2,7 +2,7 @@ import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 import { useEffect, useRef, useState } from "react"
 import axios from "axios"
-import { useLocation, useParams } from "react-router-dom"
+import { Link, useLocation, useParams } from "react-router-dom"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import SimilarProducts from "../components/SimilarProducts"
@@ -10,6 +10,7 @@ import { useCart } from "../store/useCart"
 import SkeletonProductDetail from "../components/SkeletonProductDetail"
 import { useClickOutside } from "../hooks/useOnClickOutside"
 import Ratings from "../components/Ratings"
+import MaxWidthWrapper from "../components/MaxWidthWrapper"
 
 const ProductDetail = () => {
   const [isLoading, setIsLoading] = useState<boolean >(true)
@@ -65,8 +66,22 @@ const ProductDetail = () => {
   return (
     <div className='min-h-screen flex flex-col text-text font-rubik'>
       <Navbar /> 
-      <div className="flex-1 flex items-center justify-center px-2 xl:px-4">
-          <div className="w-full flex-1 flex flex-col py-6 md:py-12 gap-8 max-w-7xl">
+      <MaxWidthWrapper className="bg-secondary">
+        <div className="flex w-full items-start justify-between py-2 lg:py-4">
+          <div className=" flex flex-col ">
+            <h1 className="text-5xl md:text-6xl font-semibold font-smooch">Shop</h1>
+            <div className="text-sm sm:text-base md:text-lg flex flex-wrap">
+              <Link to={'/'} className="text-accent-gray">Home</Link> /
+              <Link to={'/products'} className="text-accent-gray">Products</Link>/
+              <Link to={`/products/${id}`} className="">{id}</Link></div>
+          </div>
+        </div>
+        <div className="flex items-end justify-end py-4">
+          
+        </div>
+      </MaxWidthWrapper>
+      <div className="flex-1 flex  justify-center px-2 xl:px-4">
+          <div className="w-full flex-1 flex flex-col py-2 gap-8 max-w-7xl">
           {isLoading ? <SkeletonProductDetail /> : <div className="flex-1 h-full flex flex-col sm:flex-row gap-6 xl:gap-10 lg:py-8 xl:py-16">
             {data ? <Carousel className='w-full max-w-72 sm:max-w-prose  sm:w-64 sm:h-64 md:w-80 md:h-80 lg:h-96 lg:w-96 aspect-square rounded-lg relative overflow-hidden border border-accent-lightgray/60 shadow-sm mx-auto'
             responsive={{        all: {
@@ -112,7 +127,7 @@ const ProductDetail = () => {
             </div>
         </div>}
         {/* Replace mock data with real related products */}
-          <SimilarProducts />
+          <SimilarProducts subCategory={data.subCategory} _id={data._id}/>
         </div>
       </div>
       <Footer />
