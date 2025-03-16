@@ -5,6 +5,8 @@ import Navbar from '../components/Navbar'
 import { useCart } from '../store/useCart'
 import { Link } from 'react-router-dom'
 import { BsCart4 } from "react-icons/bs";
+import CheckoutForm from '../components/CheckoutForm'
+import { Toaster } from 'sonner'
 
 
 
@@ -54,26 +56,11 @@ const Checkout = () => {
                   <p className="text-3xl sm:text-4xl text-accent-gray/70 font-smooch text-center">Your shopping cart seems to be empty... Try adding some items first!</p>
                 </div>}
         </div>
-        <div className='w-full max-w-80 rounded-sm border border-accent-gray/40 shadow p-2 flex flex-col gap-1.5 h-fit'>
-          <h1 className='font-smooch text-3xl font-medium'>Checkout</h1>
-              <div className='w-full flex items-center justify-between'>
-                <p >Total Items</p>
-                <p>{items.length}</p>
-              </div>
-              <div className='w-full flex items-center justify-between'>
-                <p >Cart Subtotal</p>
-                <p>{cartTotal.toFixed(2)} $</p>
-              </div>
-              <div className='w-full h-[0.25px] bg-accent-lightgray/75 shadow-sm'></div>
-              <div className='w-full flex items-center justify-between'>
-                <p className='font-medium'>Cart Total</p>
-                <p>{cartTotal.toFixed(2)} $</p>
-              </div>
-              <button className='w-full h-10 bg-button text-white rounded-sm shadow flex items-center justify-center'>Checkout</button>
-        </div>
+        <CheckoutForm />
       </div>
     </MaxWidthWrapper>
       <Footer />
+      <Toaster richColors={true} position="top-center"/>
     </div>
   )
 }

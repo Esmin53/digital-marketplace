@@ -21,6 +21,7 @@ const ProductDetail = () => {
     _id: string
     title: string
     description: string
+    price_id: string
     authorId: {
       _id: string
       username: string
@@ -46,6 +47,8 @@ const ProductDetail = () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products/${productId}`)
 
+
+      console.log("Price Id: ", response.data.product.price_id)
       setData(response.data.product)
   
     } catch (error) {
@@ -117,7 +120,8 @@ const ProductDetail = () => {
                       title: data?.title,
                       price: data?.price,
                       image: data?.images[0],
-                      author: data?.authorId.username
+                      author: data?.authorId.username,
+                      price_id: data.price_id
                     })
                   }
                 >

@@ -6,6 +6,8 @@ interface IProduct extends Document {
   authorId: Types.ObjectId;
   description: string;
   price: number;
+  price_id: string;
+  stripe_id: string;
   category: string;
   subCategory: string;
   images: string[];
@@ -41,6 +43,14 @@ const ProductSchema = new Schema<IProduct>({
     type: Number,
     required: true,
     min: [0.1, "Price must be at least 0.1"],
+  },
+  price_id: {
+    type: String,
+    required: true, 
+  },
+  stripe_id: {
+    type: String,
+    required: true, 
   },
   category: {
     type: String,

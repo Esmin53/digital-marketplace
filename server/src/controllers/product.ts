@@ -1,6 +1,7 @@
 import { ProductValidator } from "@shared/validators/product";
 import { Request, Response } from "express"
 import Product from "../models/Product";
+import { stripe } from "@shared/lib/stripe";
 
 export const newProduct = async (req: Request, res: Response) => {
     try {
@@ -12,6 +13,15 @@ export const newProduct = async (req: Request, res: Response) => {
             return
         }
 
+        const createdProduct = await stripe.products.create({
+            name: title,
+            default_price_data: {
+                currency: "USD",
+                unit_amount: Math.round(price * 100)
+            }
+        })
+
+
         const product = new Product({ 
             title,
             description,
@@ -20,7 +30,9 @@ export const newProduct = async (req: Request, res: Response) => {
             subCategory,
             images,
             files,
-            authorId: id
+            authorId: id,
+            stripe_id: createdProduct.id,
+            price_id: createdProduct.default_price
         });
 
         const newProduct = await product.save();
@@ -79,7 +91,7 @@ export const getProduct = async (req: Request, res: Response) => {
     try {
         const { productId } = req.params
 
-        const product = await Product.findById(productId).select('title price _id authorId images averageRating category subCategory description').populate('authorId', 'username id')
+        const product = await Product.findById(productId).select('title price price_id _id authorId images averageRating category subCategory description').populate('authorId', 'username id')
 
         res.status(200).send({succes: true, product: product})
     } catch (error) {

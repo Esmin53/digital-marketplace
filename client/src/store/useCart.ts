@@ -11,7 +11,7 @@ export type CartItem = {
         title: string,
         image: string,
         price: number,
-        //priceId: string
+        price_id: string
         author: string
     } 
 }
@@ -23,7 +23,7 @@ type CartState = {
         title: string,
         image: string,
         price: number,
-        //priceId: string
+        price_id: string
         author: string
     } ) => void,
     removeItem: (productId: string) => void,
