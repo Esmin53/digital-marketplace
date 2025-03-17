@@ -38,7 +38,7 @@ export const payment = async (req: Request, res: Response) => {
         const orderId = new Types.ObjectId().toString();
 
         const stripeSession = await stripe.checkout.sessions.create({
-            success_url: `${process.env.SERVER_URL}/orders/${orderId}`,
+            success_url: `${process.env.SERVER_URL}/orders?orderId=${orderId}`,
             cancel_url: `${process.env.SERVER_URL}/checkout`,
             payment_method_types: ["card"],
             client_reference_id: id,
@@ -126,3 +126,38 @@ export const webhookHandler = async (req: Request, res: Response) => {
       res.status(500).json({ success: false, message: 'Something went wrong. Please try again.' });
     }
   };
+
+  export const getOrders = async (req: Request, res: Response) => {
+      try {
+        const {id} = res.locals.user
+  
+          const orders = await Order.find().
+          where({
+            userId: id
+          }).
+          select('_id createdAt totalAmount')
+
+          console.log("Order: ", orders)
+  
+          res.status(200).send({succes: true, orders})
+      } catch (error) {
+          console.error(error);
+          res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+      }
+  }
+
+  export const getOrder = async (req: Request, res: Response) => {
+      try {
+          const { orderId } = req.params
+  
+          const order = await Order.findById(orderId).
+          populate('products', '_id title price images category subCategory')
+
+          console.log("Order: ", order)
+  
+          res.status(200).send({succes: true, order})
+      } catch (error) {
+          console.error(error);
+          res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+      }
+  }

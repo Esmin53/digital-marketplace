@@ -1,11 +1,12 @@
 import express from "express"
 import {verifyToken} from "../middleware/auth"
-import { payment, webhookHandler } from "../controllers/payment";
+import { getOrder, getOrders, payment } from "../controllers/order";
 
 
 const router = express.Router()
 
 router.post('/payment', verifyToken ,payment)
-router.post('/webhook', express.raw({ type: 'application/json' }), webhookHandler)
+router.get('/get-orders', verifyToken ,getOrders)
+router.get('/get-order/:orderId', verifyToken ,getOrder)
 
 export default router;

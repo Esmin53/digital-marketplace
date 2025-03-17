@@ -8,12 +8,12 @@ import Register from "./pages/Register"
 import Login from "./pages/Login"
 import NewProduct from "./pages/NewProduct"
 import MyProfile from "./pages/MyProfile"
-import OrderDetail from "./pages/OrderDetail"
+import Orders from "./pages/Orders"
 
 function App() {
 
   return (
-      <Router>
+    <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<ProductList />} />
@@ -21,7 +21,7 @@ function App() {
         <Route path="/new-product" element={<NewProduct />} />
         <Route path="/my-profile" element={<MyProfile />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/orders/:id" element={<OrderDetail />} />
+        <Route path="/orders" element={<Orders />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="*" element={<NotFound />} />

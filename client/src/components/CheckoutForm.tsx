@@ -22,7 +22,7 @@ const CheckoutForm = () => {
         }
         setIsLoading(true)
         try {
-          const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/payment/payment`, {
+          const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/order/payment`, {
             items
           }, {
             headers: {
