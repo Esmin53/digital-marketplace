@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaRegStar, FaStar, FaStarHalf } from "react-icons/fa6";
+import { FaRegStar, FaStar, FaStarHalf, FaRegStarHalf } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
 interface CardProps {
@@ -23,7 +23,7 @@ const Card = ({_id, images, title, author, price, averageRating}: CardProps) => 
   const stars = [];
 
   for (let i = 0; i < fullStars; i++) {
-    stars.push(<FaRegStar className="text-accent-teal" key={`star-${i}`} />);
+    stars.push(<FaStar className="text-accent-teal" key={`star-${i}`} />);
   }
 
   if (hasHalfStar) {

@@ -3,6 +3,7 @@ import { Request, Response } from "express"
 import Product from "../models/Product";
 import { stripe } from "@shared/lib/stripe";
 import User from "../models/User";
+import Order from "../models/Order";
 
 export const newProduct = async (req: Request, res: Response) => {
     try {
@@ -50,7 +51,8 @@ export const getProducts = async (req: Request, res: Response) => {
     try {
         const subCategory = req.query.subCategory || null
         const category = req.query.category || null
-        const limit = Number(req.query.limit) || 6
+        const isFeatured = req.query.isFeatured || null
+        const limit = Number(req.query.limit) || 10
         const orderBy = req.query.orderBy || 'title-asc'
         const page = Number(req.query.page) || 1
 
@@ -70,6 +72,7 @@ export const getProducts = async (req: Request, res: Response) => {
 
         if(subCategory !== null) filters.subCategory = subCategory as string
         if(category !== null) filters.category = category as string
+        if(isFeatured !== null) filters.isFeatured = true 
 
         const products = await Product.find().select('title price _id authorId images averageRating').
         where(filters).
@@ -152,8 +155,6 @@ export const rateProduct = async (req: Request, res: Response) => {
             return curr.rating + prev
           }, 0) / tempRatings?.length
 
-        console.log(product)
-
         await Product.updateOne({
             averageRating,
             ratings: tempRatings
@@ -190,3 +191,59 @@ export const getUsersProducts = async (req: Request, res: Response) => {
       res.status(500).send({ success: false, message: 'Something went wrong. Please try again.' });
     }
   };
+
+  export const getBestratedProducts = async (req: Request, res: Response) => {
+    try {
+        const limit = Number(req.query.limit) || 10
+        const category = req.query.category || null
+        
+        let filters: any = {}
+
+        if(category !== null) filters.category = category as string
+
+        const products = await Product.find().select('title price _id authorId images averageRating').
+        limit(limit).
+        populate('authorId', 'username id').
+        sort({
+            averageRating: "desc"
+        }).
+        where(filters)
+
+        res.status(200).json({sucess: true, products });
+              
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+    }
+}
+
+export const getPopularProducts = async (req: Request, res: Response) => {
+    try {
+        const mostOrderedProducts = await Order.aggregate([
+
+            { $unwind: "$products" },
+            {
+              $group: {
+                _id: "$products", 
+                count: { $sum: 1 }, 
+              },
+            },
+          
+            { $sort: { count: -1 } },
+          
+            { $limit: 20 }, 
+          ]);
+          
+          const populatedProducts = await Product.populate(mostOrderedProducts, {
+            path: '_id',
+            model: 'Product',
+          })
+          
+          let products = populatedProducts.map((item) => item._id)
+
+        res.status(200).json({sucess: true, products });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+    }
+}

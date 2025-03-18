@@ -17,7 +17,7 @@ const BestRated = () => {
         id: number
         name: string;
         slug: string;
-    }>(CATEGORIES[0]) 
+    }>(CATEGORIES[1]) 
     const [data, setData] = useState<{
         price: number
         _id: string
@@ -62,7 +62,7 @@ const BestRated = () => {
     const getProducts = async () => {
         setIsLoading(true)
         try {
-          const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products`)
+          const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-bestrated-products?category=${category.slug}`)
     
           setData(response.data.products)
         } catch (error) {
@@ -74,7 +74,7 @@ const BestRated = () => {
   
       useEffect(() => {
         getProducts()
-      }, [])
+      }, [category])
 
   return (
     <MaxWidthWrapper className='font-rubik text-text'>

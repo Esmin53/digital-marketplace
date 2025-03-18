@@ -21,7 +21,7 @@ const Featured = () => {
   const getProducts = async () => {
     setIsLoading(true)  
     try {
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products`)
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products?isFeatured=true&limit=12`)
   
         setData(response.data.products)
       } catch (error) {

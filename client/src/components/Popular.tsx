@@ -1,23 +1,13 @@
 import Card from './Card'
 import MaxWidthWrapper from './MaxWidthWrapper'
-import { IoChevronUp } from "react-icons/io5";
-import { HiMiniArrowRight } from "react-icons/hi2";
 import { useEffect, useState } from 'react';
-import { CATEGORIES } from '../lib/data';
 import axios from "axios"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import { Link } from 'react-router-dom';
 import SkeletonCard from './SkeletonCard';
 
 const Popular = () => {
   const [isLoading, setIsLoading] = useState<boolean >(true)
-    const [isOpen, setIsOpen]  = useState<boolean >(false)
-    const [category, setCategory] = useState<{
-        id: number
-        name: string;
-        slug: string;
-    }>(CATEGORIES[0])
     const [data, setData] = useState<{
         price: number
         _id: string
@@ -32,7 +22,6 @@ const Popular = () => {
 
       const responsive = {
         superLargeDesktop: {
-          // the naming can be any, depends on you.
           breakpoint: { max: 4000, min: 3000 },
           items: 5
         },
@@ -62,8 +51,8 @@ const Popular = () => {
     const getProducts = async () => {
       setIsLoading(true)
       try {
-        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products`)
-  
+        const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-popular-products`)
+
         setData(response.data.products)
       } catch (error) {
         
@@ -79,27 +68,9 @@ const Popular = () => {
   return (
     <MaxWidthWrapper className='bg-secondary font-rubik text-text'>
         <div className='flex flex-col py-6 w-full'>
-            <div className='w-full flex flex-col sm:flex-row items-center justify-between gap-2'>
-                <h1 className='text-2xl lg:text-3xl text-center'>Popular {category.name}</h1>
-                <div className='flex gap-4'>
-                <div className='relative'>
-                    <button className='px-2 md:w-32 h-8 md:h-10 rounded-full bg-accent-teal shadow text-primary font-smooch text-xl font-semibold flex items-center justify-center gap-1' onClick={() => setIsOpen(prev => !prev)}>
-                        Category
-                         <IoChevronUp className={`${isOpen ? 'rotate-0' : 'rotate-180'} duration-150`}/> 
-                    </button>
-                    {isOpen ? <div className='absolute top-full right-2 translate-y-1 w-52 bg-primary shadow-sm border border-border rounded z-50 flex flex-col p-2 gap-2'>
-                        {CATEGORIES.map((item) => <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
-                        hover:bg-primary hover:shadow-sm hover:rounded-sm' key={item.id} onClick={() => {
-                            setCategory(item)
-                            setIsOpen(false)
-                        }}>{item.name}</p>)}
-                    </div> : null}
-                </div>
-                <Link to={`/products?category=${category.slug}`} className='px-2 md:w-32 h-8 md:h-10 rounded-full bg-accent-teal-200 shadow text-text font-smooch text-xl font-semibold flex items-center justify-center gap-1'>
-                    Explore
-                    <HiMiniArrowRight />
-                </Link>
-            </div>
+            <div className='w-full flex flex-col items-center justify-between gap-2'>
+                <h1 className='text-2xl lg:text-3xl xl:text-4xl text-center'>Our most popular products</h1>
+                <p className='text-center md:text-lg'>Browse through a collection of products most sought after by our users</p>
             </div>
             {isLoading ? <Carousel className='py-6 lg:py-10'
             responsive={responsive}
