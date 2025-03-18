@@ -25,6 +25,7 @@ const ProductDetail = () => {
     authorId: {
       _id: string
       username: string
+      purchasedProducts: string[]
     }
     images: string[]
     averageRating: number
@@ -48,7 +49,7 @@ const ProductDetail = () => {
       const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products/${productId}`)
 
 
-      console.log("Price Id: ", response.data.product.price_id)
+      console.log("Price Id: ", response.data.product.authorId.purchasedProducts)
       setData(response.data.product)
   
     } catch (error) {
@@ -106,7 +107,11 @@ const ProductDetail = () => {
               </p>
               <Ratings initialAverageRating={data.averageRating} productId={data._id}/>
               <p className="text-sm sm:text-base pb-4">{data?.description}</p>
-              {items.some(item => item.product._id === data?._id) ? (
+              {data.authorId.purchasedProducts.includes(data._id) ?  <div
+                  className="w-full max-w-96 rounded-md py-2 md:py-3 mt-auto mb-2 bg-button md:text-lg text-white hover:bg-button/95 flex items-center justify-center">
+                  Download
+                </div> :
+              items.some(item => item.product._id === data?._id) ? (
                 <div
                   className="w-full max-w-96 rounded-md py-2 md:py-3 mt-auto mb-2 bg-button md:text-lg text-white hover:bg-button/95 flex items-center justify-center">
                   In Cart

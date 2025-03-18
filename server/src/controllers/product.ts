@@ -2,6 +2,7 @@ import { ProductValidator } from "@shared/validators/product";
 import { Request, Response } from "express"
 import Product from "../models/Product";
 import { stripe } from "@shared/lib/stripe";
+import User from "../models/User";
 
 export const newProduct = async (req: Request, res: Response) => {
     try {
@@ -91,7 +92,7 @@ export const getProduct = async (req: Request, res: Response) => {
     try {
         const { productId } = req.params
 
-        const product = await Product.findById(productId).select('title price price_id _id authorId images averageRating category subCategory description').populate('authorId', 'username id')
+        const product = await Product.findById(productId).select('title price price_id _id authorId images averageRating category subCategory description').populate('authorId', 'username id purchasedProducts')
 
         res.status(200).send({succes: true, product: product})
     } catch (error) {
@@ -165,3 +166,27 @@ export const rateProduct = async (req: Request, res: Response) => {
         res.status(500).send({success: false, message: "Something went wrong. Please try again."});
     }
 }
+
+export const getUsersProducts = async (req: Request, res: Response) => {
+    try {
+      const { id } = res.locals.user;
+  
+
+      const user = await User.findById(id)
+        .select('purchasedProducts')
+        .populate({
+          path: 'purchasedProducts',
+          select: 'title price _id authorId images averageRating',
+        });
+  
+      if (!user) {
+        res.status(404).send({ success: false, message: 'User not found' });
+        return 
+      }
+  
+      res.status(200).send({ success: true, products: user.purchasedProducts });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ success: false, message: 'Something went wrong. Please try again.' });
+    }
+  };

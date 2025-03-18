@@ -68,7 +68,7 @@ const SimilarProducts = ({subCategory, _id}: SimilarProductsProps) => {
   
       useEffect(() => {
         getProducts()
-      }, [])
+      }, [_id])
 
       if(data.length === 0) {
         return <div></div>
