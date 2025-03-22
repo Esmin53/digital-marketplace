@@ -4,6 +4,7 @@ import Product from "../models/Product";
 import { stripe } from "@shared/lib/stripe";
 import User from "../models/User";
 import Order from "../models/Order";
+import mongoose from "mongoose";
 
 export const newProduct = async (req: Request, res: Response) => {
     try {
@@ -51,6 +52,7 @@ export const getProducts = async (req: Request, res: Response) => {
     try {
         const subCategory = req.query.subCategory || null
         const category = req.query.category || null
+        const authorId = req.query.authorId || null
         const isFeatured = req.query.isFeatured || null
         const limit = Number(req.query.limit) || 10
         const orderBy = req.query.orderBy || 'title-asc'
@@ -72,6 +74,7 @@ export const getProducts = async (req: Request, res: Response) => {
 
         if(subCategory !== null) filters.subCategory = subCategory as string
         if(category !== null) filters.category = category as string
+        if(authorId !== null) filters.authorId = authorId as string
         if(isFeatured !== null) filters.isFeatured = true 
 
         const products = await Product.find().select('title price _id authorId images averageRating').
@@ -171,7 +174,8 @@ export const rateProduct = async (req: Request, res: Response) => {
 export const getUsersProducts = async (req: Request, res: Response) => {
     try {
       const { id } = res.locals.user;
-  
+      const limit = Number(req.query.limit) || 10
+      const page = Number(req.query.page) || 1
 
       const user = await User.findById(id)
         .select('purchasedProducts')
@@ -184,8 +188,52 @@ export const getUsersProducts = async (req: Request, res: Response) => {
         res.status(404).send({ success: false, message: 'User not found' });
         return 
       }
+
+      let idAsObjectId = new mongoose.Types.ObjectId(id);
+      let p = (page-1) * limit
+
+      const data = await User.aggregate([
+        { $match: { "_id": idAsObjectId}},
+        { $unwind: "$purchasedProducts"},
+        { $lookup: {
+            from: "products",
+            localField: "purchasedProducts",
+            foreignField: "_id",
+            as: "product"
+        }},
+        { $project: {
+            product: 1,
+            _id: 0
+        }},
+        { $unwind: "$product"},
+        { $project: {
+            "product._id": 1,
+            "product.title": 1,
+            "product.price": 1,
+            "product.images": 1
+        }},
+        { $project: {
+            product: 1
+        }},
+        { $replaceRoot: { newRoot: "$product" } },
+        {
+            $facet: {
+              products: [
+                { $skip: p },
+                { $limit: limit }
+              ],
+              totalCount: [
+                { $count: "count" }
+              ]
+            }
+          }
+      ])
+
+      const result = data[0];
+      const products = result.products;
+      const totalCount = result.totalCount[0].count;
   
-      res.status(200).send({ success: true, products: user.purchasedProducts });
+      res.status(200).send({ success: true, products, totalCount });
     } catch (error) {
       console.error(error);
       res.status(500).send({ success: false, message: 'Something went wrong. Please try again.' });

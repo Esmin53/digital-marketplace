@@ -130,14 +130,16 @@ export const webhookHandler = async (req: Request, res: Response) => {
   export const getOrders = async (req: Request, res: Response) => {
       try {
         const {id} = res.locals.user
+        const limit = Number(req.query.limit) || 10
+        const page = Number(req.query.page) || 1
   
           const orders = await Order.find().
           where({
             userId: id
           }).
-          select('_id createdAt totalAmount')
-
-          console.log("Order: ", orders)
+          select('_id createdAt totalAmount').
+          limit(limit).
+          skip((page-1) * limit)
   
           res.status(200).send({succes: true, orders})
       } catch (error) {

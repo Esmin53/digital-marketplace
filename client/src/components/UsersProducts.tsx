@@ -1,7 +1,7 @@
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useAuthStore } from "../store/useAuthStore"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 
 const UsersProducts = () => {
@@ -13,28 +13,40 @@ const UsersProducts = () => {
         title: string
         _id: string
     }[]>([])
+    const [page, setPage] = useState(1)
+    const [totalCount, setTotalCounnt] = useState<number | null>(null)
+    const isInitialLoad = useRef(true);
+    const [isLoading, setIsLoading] = useState<boolean >(false)
+
 
     const {currentUser} = useAuthStore()
-    const navigate = useNavigate()
 
-    const getProducts = async () => {
+    const getProducts = async (p: number) => {
+        if(isLoading) return
+        setIsLoading(true)
         try {
-            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-user-products`, {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-user-products?limit=6&page=${p}`, {
                 headers: {
                     Authorization: `Bearer ${currentUser?.token}`
                 }
               }
             )
 
-            setProducts(response.data.products)
-            console.log("Response: ", response.data.products)
+            setProducts(prev => [...prev, ...response.data.products])
+            setTotalCounnt(response.data.totalCount)
+            setPage(p)
         } catch (error) {
             console.log("Error: ", error)
+        } finally {
+            setIsLoading(false)
         }
     }
 
     useEffect(() => {
-        getProducts()
+        if (isInitialLoad.current) {
+            getProducts(1)
+            isInitialLoad.current = false;
+        }
     }, [])
 
   return (
@@ -45,7 +57,7 @@ const UsersProducts = () => {
             <p className="text-lg text-accent-gray">Here is a list of products you own.</p>
         </div>
         <div className="w-full grid grid-cols-1 lg:grid-cols-2 px-2 py-4 gap-2">
-            {products.map(({_id, title, price, images}) => <div className="w-full p-1 flex gap-2 bg-accent-lightgray/10 rounded-sm border border-accent-lightgray/15" key={_id} onClick={() => navigate(`/products/${_id}`)}>
+            {products.map(({_id, title, price, images}) => <div className="w-full p-1 flex gap-2 bg-accent-lightgray/10 rounded-sm border border-accent-lightgray/15" key={_id}>
                 <img className="w-20 h-20 bg-accent-lightgray/20 rounded" src={images[0]} alt="Product image"/>
                 <div className="flex flex-col flex-1 justify-between">
                     <p className="text-sm text-accent-gray/75">{_id}</p>
@@ -55,11 +67,18 @@ const UsersProducts = () => {
                     </div>
                     <div className="flex w-full items-center justify-evenly">
                         <button className="text-sky-500">Download</button>
-                        <button>Visit page</button>
+                        <Link to={`/products/${_id}`}>Visit page</Link>
                     </div>
                 </div>
             </div>)}
         </div>
+        {isLoading ? <div className='w-full grid grid-cols-1 lg:grid-cols-2 px-2 gap-2'>
+            <div className="w-full gap-2 bg-accent-lightgray/30 rounded-sm border border-accent-lightgray/20 h-24 animate-pulse" />
+            <div className="w-full gap-2 bg-accent-lightgray/30 rounded-sm border border-accent-lightgray/20 h-24 animate-pulse" />
+        </div> : null}
+        {totalCount && totalCount !== products.length ? <div className="w-full flex items-center justify-center">
+            <button className="text-sky-500 mx-auto text-lg" onClick={() => getProducts(page + 1)}>Load more</button>
+        </div> : null}
     </div>
   )
 }

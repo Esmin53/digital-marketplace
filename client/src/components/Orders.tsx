@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useAuthStore } from "../store/useAuthStore"
 import axios from "axios"
 import { format } from "date-fns"
@@ -11,21 +11,24 @@ const Orders = () => {
     createdAt: Date
     totalAmount: number
   }[]>([])
-
+  let [page, setPage] = useState(1)
+  const isInitialLoad = useRef(true);
 
     const {currentUser} = useAuthStore()
     const navigate = useNavigate()
 
-    const getOrders = async () => {
+    const getOrders = async (p: number) => {
+      if(isLoading) return
       setIsLoading(true)
       try {
-          const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/order/get-orders`, {
+          const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/order/get-orders?limit=2&page=${p}`, {
             headers: {
               Authorization: `Bearer ${currentUser?.token}`
             }
           })
 
-          setOrders(response.data.orders)
+          setPage(p)
+          setOrders(prev => [...prev, ...response.data.orders])
           console.log("Response: ", response.data)
       } catch (error) {
         console.log("Error: ", error)
@@ -35,7 +38,11 @@ const Orders = () => {
     }
 
     useEffect(() => {
-      getOrders()
+      if (isInitialLoad.current) {
+        getOrders(1)
+        isInitialLoad.current = false;
+      }
+
     }, [])
 
   return (
@@ -52,6 +59,9 @@ const Orders = () => {
                 <p className="">Order total: {totalAmount.toFixed(2)} $</p>
             </div>)}
         </div>
+        {true ? <div className="w-full flex items-center justify-center py-1">
+            <button className="text-sky-500 mx-auto text-lg" onClick={() => getOrders(page + 1)}>Load more</button>
+        </div> : null}
     </div>
   )
 }
