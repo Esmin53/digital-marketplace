@@ -4,7 +4,7 @@ import Product from "../models/Product";
 import { stripe } from "@shared/lib/stripe";
 import User from "../models/User";
 import Order from "../models/Order";
-import mongoose from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 
 export const newProduct = async (req: Request, res: Response) => {
     try {
@@ -290,6 +290,35 @@ export const getPopularProducts = async (req: Request, res: Response) => {
           let products = populatedProducts.map((item) => item._id)
 
         res.status(200).json({sucess: true, products });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+    }
+}
+
+export const updateProduct = async (req: Request, res: Response) => {
+    try {
+        const { id } = res.locals.user;
+        const { productId } = req.params
+        let { title, description} = req.body
+
+        const product = await Product.findById(productId).select('_id authorId')
+        if (!product) {
+            res.status(404).json({ success: false, message: "Product not found" });
+            return 
+        }
+
+        if(!new mongoose.Types.ObjectId(id).equals(product.authorId)) {
+            res.status(401).json({sucess: false, message: "Unauthorized"})
+            return
+        }
+
+        await Product.findByIdAndUpdate(product._id, {
+            title,
+            description
+        })
+
+        res.status(200).json({ sucess: true, message: "Product updated successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).send({success: false, message: "Something went wrong. Please try again."});

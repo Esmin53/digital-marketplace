@@ -64,7 +64,7 @@ const UploadedProducts = () => {
                         <p className="text-sm sm:text-base flex">{price.toFixed(2)}$</p>
                     </div>
                     <div className="flex w-full items-center justify-evenly">
-                        <button className="text-sky-500">Manage</button>
+                        <Link to={`/manage/${_id}`} className="text-sky-500">Manage</Link>
                         <Link to={`/products/${_id}`}>Visit page</Link>
                     </div>
                 </div>

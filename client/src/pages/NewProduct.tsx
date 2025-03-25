@@ -117,7 +117,7 @@ const NewProduct = () => {
     
     
         } catch (error) {
-          toast.error('There was an error adding this product to the database. Please try again.')
+          toast.error('There was an error updating this product. Please try again.')
           console.log(error)
         } finally {
           setIsLoading(false)
