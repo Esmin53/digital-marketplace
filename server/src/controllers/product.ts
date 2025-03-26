@@ -5,6 +5,7 @@ import { stripe } from "@shared/lib/stripe";
 import User from "../models/User";
 import Order from "../models/Order";
 import mongoose, { Mongoose } from "mongoose";
+import { format } from "date-fns";
 
 export const newProduct = async (req: Request, res: Response) => {
     try {
@@ -321,6 +322,111 @@ export const updateProduct = async (req: Request, res: Response) => {
         res.status(200).json({ sucess: true, message: "Product updated successfully" });
     } catch (error) {
         console.error(error);
+        res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+    }
+}
+
+const updatePrice = async (req: Request, res: Response) => {
+    try {
+        
+        res.status(200).json({ sucess: true, message: "Product updated successfully" });
+    } catch (error) {
+        
+        res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+    }
+}
+
+export const getProductStats = async (req: Request, res: Response) => {
+    try {
+        const { id } = res.locals.user;
+        const { productId } = req.params
+        
+        const idAsObjectId = new mongoose.Types.ObjectId(productId)
+        const products = await Order.aggregate([
+            { $unwind: "$products" },
+            { $match: { "products": idAsObjectId}},
+            { $lookup: {
+                from: "products",
+                localField: "products",
+                foreignField: "_id",
+                as: "product"
+            }}, 
+            { $unwind: "$product" },
+            { $addFields: {
+                price: "$product.price"
+            }},
+            { $project: {
+                createdAt: 1,
+                price: 1,
+                month: { $month: "$createdAt" }, 
+                year: { $year: "$createdAt" } 
+            }},
+            { $facet: {
+                salesByMonth: [{
+                    $group: {
+                        _id: "$month",
+                        totalSales: { $sum: "$price" },
+                        count: { $sum: 1 }
+                    }
+                },
+                {
+                    $sort: {
+                    _id: 1
+                    }
+                }],
+                totalEarnings: [
+                    { 
+                        $group: { 
+                            _id: null,
+                            total: { $sum: "$price" } 
+                        } 
+                    }
+                ]
+            }}
+  
+        ])
+
+        let salesByMonth: {
+            _id: number, 
+            totalSales: number, 
+            count: number,
+            month?: string
+        }[] = []
+
+        const results: {
+            _id: number, 
+            totalSales: number, 
+            count: number,
+            month?: string
+        }[] = products[0].salesByMonth
+
+        const totalEarnings = products[0]?.totalEarnings[0]?.total || 0
+        const totalSales = results.reduce((sum, item) => sum + item.count, 0);
+
+        let j = 0
+        for(let i = 1; i < 13; i++) {
+            const date = new Date(2025, i-1); 
+            const month = format(date, "MMMM")
+
+            if(results[j]?._id === i ) {
+                salesByMonth.push({
+                    ...results[j],
+                    month: month.slice(0, 3)
+                })
+                j++
+            } else {
+                salesByMonth.push({
+                    _id: i,
+                    totalSales: 0,
+                    count: 0,
+                    month: month.slice(0, 3)
+                })
+            }
+        }
+
+        res.status(200).json({ sucess: true, message: "Product data", salesByMonth, totalEarnings, totalSales });
+    } catch (error) {
+        console.log("Error: ", error)
         res.status(500).send({success: false, message: "Something went wrong. Please try again."});
     }
 }

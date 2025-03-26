@@ -7,6 +7,8 @@ import axios from "axios"
 import { useAuthStore } from "../store/useAuthStore"
 import { LuLoaderCircle } from "react-icons/lu"
 import { toast, Toaster } from "sonner"
+import { FaCheck } from "react-icons/fa6"
+import ProductStats from "../components/ProductStats"
 
 
 const Manage = () => {
@@ -32,6 +34,7 @@ const Manage = () => {
       } | null>(null)
       const [isLoading, setIsLoading] = useState<boolean >(false)
       const [title, setTitle] = useState<string | null >(null)
+      const [price, setPrice] = useState<number | null >(null)
       const [description, setDescription] = useState<string | null >(null)
       const [isUpdating, setIsUpdating] = useState<boolean >(false)
 
@@ -40,10 +43,9 @@ const Manage = () => {
         try {
           const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products/${id}`)
     
-    
-          console.log("Price Id: ", response.data.product.authorId.purchasedProducts)
           setData(response.data.product)
           setTitle(response.data.product.title)
+          setPrice(response.data.product.price)
           setDescription(response.data.product.description)
       
         } catch (error) {
@@ -85,6 +87,29 @@ const Manage = () => {
             setIsUpdating(false)
         }
       }
+
+      const updatePrice = async () => {
+        try {
+          
+        } catch (error) {
+          
+        }
+      }
+
+      const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        
+        if (value === '') {
+          setPrice(0);
+          return;
+        }
+      
+        const numValue = parseFloat(value);
+        
+        if (!isNaN(numValue)) {
+          setPrice(numValue);
+        }
+      };
     
       useEffect(() => {
         getProducts()
@@ -95,9 +120,9 @@ const Manage = () => {
         <Navbar /> 
         <MaxWidthWrapper className="bg-secondary flex flex-col">
             <div className="flex w-full items-start justify-between py-2 lg:py-4">
-              <div className=" flex flex-col ">
+              <div className="flex flex-col ">
                   <h1 className="text-5xl md:text-6xl font-semibold font-smooch">Manage Product</h1>
-                  <p className="text-lg flex"><Link to={'/my-profile'}>My Profile</Link> /<span>Manage</span>/<Link to={`/manage/${id}`}>{id}</Link></p>
+                  <p className="text-lg flex flex-wrap"><Link to={'/my-profile'}>My Profile</Link> /<span>Manage</span>/<Link to={`/manage/${id}`}>{id}</Link></p>
               </div>
             </div>
           </MaxWidthWrapper>
@@ -127,8 +152,25 @@ const Manage = () => {
             <button className="w-full h-12 bg-button rounded shadow-sm text-white flex items-center justify-center" onClick={() => updateProduct()}>
                 {isUpdating ? <LuLoaderCircle className="animate-spin lg:text-xl"/> : "Update"}
             </button>
+            <div className="w-full py-2 flex gap-1 items-end">
+                <div className="flex-1">
+                  <label className="font-medium">Update price</label>
+                  <input className="w-full h-12 rounded shadow-sm border border-accent-lightgray bg-accent-lightgray/10 px-2 outline-secondary"   placeholder="Your products title" type="number" value={price || 0} onChange={handlePriceChange}/>
+                </div>
+                <button className="h-12 w-12 rounded-sm bg-button hover:bg-button/90 flex items-center justify-center">
+                  <FaCheck className="text-lg text-white"/>
+                </button>
+            </div>
         </div>
         </div>
+        <div className="w-full">
+          <div className="w-full flex flex-col">
+            <h1 className="font-smooch text-4xl">Statistics</h1>
+            <div className="h-[0.5px] w-full bg-accent-lightgray/60 shadow-sm" />
+            <p className="text-lg text-accent-gray">Analysis of sales and revenue for this product.</p>
+          </div>
+        </div>
+        <ProductStats />
         </div>
       </MaxWidthWrapper>
         

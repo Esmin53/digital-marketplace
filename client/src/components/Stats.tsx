@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, Rectangle, PieChart, Pie, AreaChart, Area } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, Rectangle, PieChart, Pie, AreaChart, Area, CartesianGrid, Cell } from 'recharts';
 import { useAuthStore } from '../store/useAuthStore';
 import { useEffect, useState } from 'react';
 
-
+const COLORS = ["#fbf8cc", "#fde4cf", "#ffcfd2", "#f1c0e8", "#cfbaf0", "#a3c4f3", "#90dbf4", "#8eecf5", "#98f5e1", "#b9fbc0", "#fdc5f5", "#b2f7ef"];
 
 const Stats = () => {
 
@@ -44,7 +44,8 @@ const Stats = () => {
                         <XAxis dataKey="monthName" />
                         <YAxis />
                         <Tooltip />
-                        <Line type="monotone" dataKey="total" stroke="#2ec4b6" />
+                        <Line type="monotone" dataKey="total" stroke="#2ec4b6" strokeWidth={2} name="Total Earnings" unit="$"/>
+                        <CartesianGrid strokeDasharray="3 3" opacity={0.5} />
                     </LineChart>
                 </ResponsiveContainer>
             </div>
@@ -64,7 +65,8 @@ const Stats = () => {
                     }}
                     >
                     <YAxis />
-                    <Area type="monotone" dataKey="total" stroke="#2ec4b6" fill="#cbf3f0" />
+                    <Area type="monotone" dataKey="total" stroke="#2ec4b6" fill="#cbf3f0" strokeWidth={2} name="Total Earnings" unit="$"/>
+                    <CartesianGrid strokeDasharray="3 3" opacity={0.5} />
                     </AreaChart>
                     </ResponsiveContainer>
                 </div>
@@ -73,7 +75,7 @@ const Stats = () => {
                 <PieChart
                     width={200}
                     height={60}
-                    data={allMonths}
+                   
                     margin={{
                         top: 5,
                         right: 0,
@@ -85,13 +87,30 @@ const Stats = () => {
                         <Pie
                             dataKey="total"
                             isAnimationActive={false}
-                            data={data}
+                            data={allMonths}
                             cx="50%"
                             cy="50%"
                             outerRadius={80}
                             fill="#2ec4b6"
                             label
+                            name="Total Earnings"                      
+                        >                  
+                              {allMonths.map((entry, index) => (
+                                <Cell 
+                                key={`cell-${index}`} 
+                                fill={COLORS[index % COLORS.length]}                              
+                                />
+                            ))}
+                        </Pie>
+                        <Tooltip 
+                            contentStyle={{ 
+                            background: '#f8f7ff', 
+                            color: '#00171f', 
+                            borderRadius: '4px' 
+                        }}
+                            formatter={(value, name) => [`$${value}`, name]}
                         />
+
                 </PieChart>
                 </ResponsiveContainer>
                 </div>
@@ -102,10 +121,10 @@ const Stats = () => {
                 <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={allMonths}>
                         
-                        <Bar dataKey="total" fill="#216869" />
+                        <Bar dataKey="total" fill="#216869" name="Total Earnings" unit="$"/>
                         <XAxis dataKey="monthName" />
                         <YAxis />
-                        <Tooltip />
+                        <Tooltip cursor={{ fill: 'rgba(178, 247, 239, 0.3)' }}/>
                         <Legend />
                     </BarChart>
                 </ResponsiveContainer>
