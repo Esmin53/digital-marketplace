@@ -1,11 +1,13 @@
 import axios from "axios"
 import { useEffect, useRef, useState } from "react"
 import { useAuthStore } from "../store/useAuthStore"
-import { Link, useNavigate } from "react-router-dom"
-
+import { Link } from "react-router-dom"
+import { supabase } from "../lib/supabaseClient"
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
+import { LuLoaderCircle } from "react-icons/lu"
 
 const UsersProducts = () => {
-
     const [products, setProducts] = useState<{
         authorId: string
         images: string[]
@@ -17,6 +19,7 @@ const UsersProducts = () => {
     const [totalCount, setTotalCounnt] = useState<number | null>(null)
     const isInitialLoad = useRef(true);
     const [isLoading, setIsLoading] = useState<boolean >(false)
+    const [isDownloading, setIsDownloading] = useState<boolean >(false)
 
 
     const {currentUser} = useAuthStore()
@@ -39,6 +42,42 @@ const UsersProducts = () => {
             console.log("Error: ", error)
         } finally {
             setIsLoading(false)
+        }
+    }
+
+    const downloadAsZip = async (filePaths: string[]) => {
+        const zip = new JSZip();
+      
+        const promises = filePaths.map(async (filePath) => {
+          const { data } = await supabase
+            .storage
+            .from('e-book-marketplace')
+            .download(filePath);
+            //@ts-ignore
+          zip.file(filePath.split('/').pop(), data);
+        });
+      
+        await Promise.all(promises);
+      
+        const zipBlob = await zip.generateAsync({ type: 'blob' });
+        saveAs(zipBlob, 'my-files.zip');
+      };
+
+    const handleDownload = async (_id: string) => {
+        if(isDownloading) return
+        setIsDownloading(true)
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/download/${_id}`, {
+                headers: {
+                    Authorization: `Bearer ${currentUser?.token}`
+                }
+              })
+
+              await downloadAsZip(response.data.files)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsDownloading(false)
         }
     }
 
@@ -66,7 +105,9 @@ const UsersProducts = () => {
                         <p className="text-sm sm:text-base">{price.toFixed(2)} $</p>
                     </div>
                     <div className="flex w-full items-center justify-evenly">
-                        <button className="text-sky-500">Download</button>
+                        <button className="text-sky-500" onClick={() => handleDownload(_id)}>
+                            {isDownloading ? <LuLoaderCircle className="animate-spin"/> : "Download"}
+                        </button>
                         <Link to={`/products/${_id}`}>Visit page</Link>
                     </div>
                 </div>
