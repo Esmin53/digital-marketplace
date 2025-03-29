@@ -62,7 +62,10 @@ const Login = () => {
                 e.preventDefault()
                 handleSubmit()
             }}>
-            <h1 className="font-smooch text-5xl font-bold text-center">Sign In</h1>
+            <div className="w-full -space-y-2">
+                <Link to='/' className="text-sm text-sky-500 w-full flex justify-end">Back to homepage</Link>
+                <h1 className="font-smooch text-5xl font-bold text-center">Sign In</h1>
+            </div>
             <div className="flex-1 w-full flex items-center justify-center flex-col gap-2">
             <div className="w-full">
                 <label className="text-sm">Username</label>

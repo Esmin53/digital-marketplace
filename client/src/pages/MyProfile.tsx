@@ -1,12 +1,9 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Footer from '../components/Footer'
 import MaxWidthWrapper from '../components/MaxWidthWrapper'
 import Navbar from '../components/Navbar'
 import { useAuthStore } from '../store/useAuthStore'
-import axios from "axios"
-import { useEffect, useState } from 'react'
-import Card from '../components/Card'
-import SkeletonCard from '../components/SkeletonCard'
+import { useEffect } from 'react'
 import UsersProducts from '../components/UsersProducts'
 import Orders from '../components/Orders'
 import Stats from '../components/Stats'
@@ -14,36 +11,42 @@ import UploadedProducts from '../components/UploadedProducts'
 
 const MyProfile = () => {
     let { currentUser } = useAuthStore()
+    const navigate = useNavigate()
 
-    const [products, setProducts] = useState<{
-        price: number
-        _id: string
-        title: string
-        authorId: {
-          _id: string
-          username: string
-        }
-        images: string[]
-        averageRating: number
-      }[]>([])
-      const [isLoading, setIsLoading] = useState<boolean >(false)
+  console.log("CurrentUser: ", currentUser)
 
-    const getUserInfo = async () => {
-        setIsLoading(true)
-        try {
-            const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/user/get-user/${currentUser?.user.id}`)
 
-            setProducts(response.data.products)
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setIsLoading(false)
-        }
-    }
 
     useEffect(() => {
-        getUserInfo()
+      if(!currentUser) {
+        navigate('/')
+      }
     }, [])
+
+    if(!currentUser) {
+      return (
+        <div className='min-h-screen flex flex-col text-text font-rubik'>
+          <Navbar /> 
+          <MaxWidthWrapper className="bg-secondary flex flex-col">
+              <div className="flex w-full items-start justify-between py-2 lg:py-4">
+                <div className=" flex flex-col ">
+                    <h1 className="text-5xl md:text-6xl font-semibold font-smooch">My Profile</h1>
+                    <p className="text-lg"><Link to={'/'}>Home</Link> /<Link to={'/my-profile'}>My Profile</Link></p>
+                </div>
+              </div>
+              <div className="flex items-end justify-end py-4">
+                <h2 className="font-playwrite text-xs sm:text-xl font-semibold text-white ">Top Quality Digital Assets On Your Fingertips.</h2>
+              </div>
+            </MaxWidthWrapper>
+        <MaxWidthWrapper className='flex-1 items-start'>
+          <div className="flex-1 flex flex-col items-center justify-center py-4 gap-4">
+            
+          </div>
+        </MaxWidthWrapper>
+          <Footer />
+        </div>
+      )
+    }
 
   return (
     <div className='min-h-screen flex flex-col text-text font-rubik'>

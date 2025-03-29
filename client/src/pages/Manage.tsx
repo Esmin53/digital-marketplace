@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import MaxWidthWrapper from "../components/MaxWidthWrapper"
 import Navbar from "../components/Navbar"
 import Footer from "../components/Footer"
@@ -15,6 +15,7 @@ const Manage = () => {
     const { id } = useParams()
 
     const {currentUser} = useAuthStore()
+    const navigate = useNavigate()
 
     const [data, setData] = useState<{
         price: number
@@ -43,10 +44,14 @@ const Manage = () => {
         try {
           const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products/${id}`)
     
-          setData(response.data.product)
-          setTitle(response.data.product.title)
-          setPrice(response.data.product.price)
-          setDescription(response.data.product.description)
+          if(response.data.product.authorId._id !== currentUser?.user.id) {
+            toast.error("You are not authorized to access this page!")
+          } else {
+            setData(response.data.product)
+            setTitle(response.data.product.title)
+            setPrice(response.data.product.price)
+            setDescription(response.data.product.description)
+          }
       
         } catch (error) {
           
@@ -57,6 +62,7 @@ const Manage = () => {
 
       const updateProduct = async () => {
         if(isUpdating) return
+        if(currentUser?.user.id !== data?.authorId._id) return
         setIsUpdating(true)
         try {
             const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/product/update-product/${id}`, {
@@ -115,6 +121,12 @@ const Manage = () => {
         getProducts()
       }, [id])
 
+      useEffect(() => {
+        if(!currentUser) {
+          navigate("/")
+        }
+      }, [])
+
     return (
         <div className='min-h-screen flex flex-col text-text font-rubik'>
         <Navbar /> 
@@ -170,7 +182,7 @@ const Manage = () => {
             <p className="text-lg text-accent-gray">Analysis of sales and revenue for this product.</p>
           </div>
         </div>
-        <ProductStats />
+         <ProductStats />
         </div>
       </MaxWidthWrapper>
         

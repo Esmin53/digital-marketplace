@@ -8,15 +8,8 @@ import { BsCart4 } from "react-icons/bs";
 import CheckoutForm from '../components/CheckoutForm'
 import { Toaster } from 'sonner'
 
-
-
 const Checkout = () => {
-
   const { items, removeItem } = useCart() 
-
-  const cartTotal = items.reduce((prev, curr) => {
-    return curr.product.price + prev
-  }, 0)
 
   return (
     <div className='min-h-screen flex flex-col text-text font-rubik'>

@@ -37,7 +37,6 @@ const Register = () => {
             setIsLoading(true)
 
             const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/auth/register`, {username, password})
-            console.log("Response: ", response)
             setIsLoading(false)
             if(response.status === 200) {
                 toast.success("You have registered successfully. You will be redirected to login.")
@@ -76,7 +75,10 @@ const Register = () => {
     <div className="w-screen h-screen flex relative items-center justify-center bg-primary font-rubik">
         <div className="h-[44%] w-full bg-secondary absolute top-0 " />
         <form className="max-w-96 w-full min-h-96 bg-transparent sm:bg-primary sm:shadow z-10 sm:border border-accent-lightgray/70 rounded-sm flex flex-col p-4 items-center gap-12" onSubmit={handleSubmit(onSubmit)}>
-            <h1 className="font-smooch text-5xl font-bold text-center">Create new account</h1>
+        <div className="w-full -space-y-2">
+                <Link to='/' className="text-sm text-sky-500 w-full flex justify-end z-40">Back to homepage</Link>
+                <h1 className="font-smooch text-5xl font-bold text-center">Create new account</h1>
+            </div>
             <div className="flex-1 w-full flex items-center justify-center flex-col gap-2">
             <div className="w-full">
                 <label className="text-sm">Username</label>

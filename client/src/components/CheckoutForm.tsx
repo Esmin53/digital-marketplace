@@ -4,12 +4,14 @@ import axios from "axios"
 import { useAuthStore } from "../store/useAuthStore"
 import { LuLoaderCircle } from "react-icons/lu"
 import { toast } from "sonner"
+import { useNavigate } from "react-router-dom"
 
 const CheckoutForm = () => {
     const [isLoading, setIsLoading] = useState(false)
 
       const { items } = useCart() 
       const {currentUser} = useAuthStore()
+      const navigate = useNavigate()
     
       const cartTotal = items.reduce((prev, curr) => {
         return curr.product.price + prev
@@ -58,9 +60,11 @@ const CheckoutForm = () => {
           <p className='font-medium'>Cart Total</p>
           <p>{cartTotal.toFixed(2)} $</p>
         </div>
-        <button className='w-full h-10 bg-button text-white rounded-sm shadow flex items-center justify-center' onClick={() => payment()}>
+        {!currentUser ? <button className='w-full h-10 bg-button text-white rounded-sm shadow flex items-center justify-center' onClick={() => navigate('/login?src=checkout')}>
+           Checkout
+        </button> : <button className='w-full h-10 bg-button text-white rounded-sm shadow flex items-center justify-center' onClick={() => payment()}>
           {isLoading ? <LuLoaderCircle className="animate-spin md:text-lg"/> : "Checkout"}
-        </button>
+        </button>}
   </div>
   )
 }
