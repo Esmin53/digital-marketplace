@@ -16,11 +16,12 @@ import SkeletonCard from "../components/SkeletonCard"
 const ProductList = () => {
   const [searchParams] = useSearchParams();
   const initialCategory = searchParams.get("category") || null;
+  const initialSubCategory = searchParams.get("subCategory") || null;
 
   const [isOpen, setIsOpen] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [category, setCategory] = useState<string | null>(initialCategory)
-  const [subCategory, setSubCategory] = useState<string | null>(null)
+  const [subCategory, setSubCategory] = useState<string | null>(initialSubCategory)
   const [orderBy, setOrderBy] = useState<string>("title-desc")
   let [page, setPage] = useState<number >(1)
   let [totalResults, setTotalResults] = useState<number >(0)

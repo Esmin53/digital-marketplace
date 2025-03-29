@@ -18,7 +18,7 @@ const BestRated = () => {
         id: number
         name: string;
         slug: string;
-    }>(CATEGORIES[1]) 
+    }>(CATEGORIES[0]) 
     const [data, setData] = useState<{
         price: number
         _id: string

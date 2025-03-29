@@ -24,7 +24,7 @@ const Navbar = () => {
         <MaxWidthWrapper className="bg-secondary shadow-sm">
         <div className="w-full max-w-7xl h-14 md:h-16 flex gap-6 items-center">
             <Link to={'/'} className="text-3xl sm:text-4xl md:text-5xl font-bold text-accent-teal font-smooch">
-                DigiSeal
+                PixelVault
             </Link>
             <div className="flex-1 flex gap-6 items-center">
             <div className="flex h-full items-center ml-auto gap-3 z-50">
