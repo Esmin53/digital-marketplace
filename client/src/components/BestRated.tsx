@@ -91,9 +91,9 @@ const BestRated = () => {
                         Category
                          <IoChevronUp className={`${isOpen ? 'rotate-0' : 'rotate-180'} duration-150`}/> 
                     </button>
-                    {isOpen ? <div className='absolute top-full right-2 translate-y-1 w-52 bg-secondary shadow-sm border border-border rounded z-50 flex flex-col p-2 gap-2'>
+                    {isOpen ? <div className='absolute top-full right-2 translate-y-1 w-52 bg-secondary shadow-sm border border-border rounded z-50 flex flex-col p-2 gap-2' ref={modalRef}>
                         {CATEGORIES.map((item) => <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
-                        hover:bg-primary hover:shadow-sm hover:rounded-sm' key={item.id} ref={modalRef} onClick={() => {
+                        hover:bg-primary hover:shadow-sm hover:rounded-sm' key={item.id} onClick={() => {
                             setCategory(item)
                             setIsOpen(false)
                         }}>{item.name}</p>)}
