@@ -43,9 +43,15 @@ export async function uploadFile(file: File, folder: string) {
           throw error; 
         }
   
-        
-        const fullUrl = `https://ziilfxkhmjlollmbngum.supabase.co/storage/v1/object/public/${data.fullPath}`;
-        return fullUrl;
+        let url: string | null = null
+
+        if(folder === 'files') {
+          url = `${folder}/${filename}`
+        } else {
+          url = `https://ziilfxkhmjlollmbngum.supabase.co/storage/v1/object/public/${data.fullPath}`;
+        } 
+
+        return url;
       });
   
       

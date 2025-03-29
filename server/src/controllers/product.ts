@@ -430,3 +430,49 @@ export const getProductStats = async (req: Request, res: Response) => {
         res.status(500).send({success: false, message: "Something went wrong. Please try again."});
     }
 }
+
+export const download = async (req: Request, res: Response) => {
+    try {
+        const { id } = res.locals.user;
+        const { productId } = req.params
+
+        const userId = new mongoose.Types.ObjectId(id)
+        const productIdAsObject = new mongoose.Types.ObjectId(productId)
+
+        const result = await User.aggregate([
+            { $match: { "_id": userId}},
+            { $unwind: "$purchasedProducts" },
+            { $match: { "purchasedProducts": productIdAsObject}},
+            { $lookup: {
+                from: "products",
+                localField: "purchasedProducts",
+                foreignField: "_id",
+                as: "product"
+            }}, 
+            {
+                $replaceRoot: {
+                  newRoot: { $arrayElemAt: ["$product", 0] }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    files: 1
+                }
+            }
+        ])
+
+        if(result.length === 0) {
+            res.status(401).json({ sucess: false, message: "Unauthorized, please buy the product first." })
+            return
+        }
+
+        let files = result[0].files
+        console.log("Result: ", files)
+
+        res.status(200).json({ sucess: true, message: "Download", files });
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+    }
+}
