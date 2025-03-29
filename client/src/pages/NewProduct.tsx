@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
 import { useAuthStore } from "../store/useAuthStore"
@@ -14,6 +14,7 @@ import MaxWidthWrapper from "../components/MaxWidthWrapper"
 import { CATEGORIES_ENUM, SUBCATEGORIES_ENUM } from "../../../shared/constants/enums";
 import { LuLoaderCircle } from "react-icons/lu"
 import axios from "axios"
+import { useOnClickOutside } from "../lib/utils"
 
 type CategoryEnum = typeof CATEGORIES_ENUM[number]
 type SubcategoryEnum = typeof SUBCATEGORIES_ENUM[number]
@@ -35,6 +36,12 @@ const NewProduct = () => {
     const [file, setFile] = useState<File[] >([])
     const [images, setImages] = useState<File[] >([])
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const categoriesRef = useRef<HTMLDivElement>(null);
+    const subCategoriesRef = useRef<HTMLDivElement>(null);
+        
+        
+    useOnClickOutside(categoriesRef, () => setIsCategoriesOpen(false));
+    useOnClickOutside(subCategoriesRef, () => setIsSubCategoriesOpen(false));
 
     const removePreviewImage = (index: number) => {
         setImages(prev => prev.filter((item, i) => i !== index))
@@ -173,7 +180,7 @@ const NewProduct = () => {
                             </div>
                             <FaChevronDown className="text-accent-gray" />
                         </div>
-                    {isCategoriesOpen ? <div className='absolute top-full right-2 translate-y-1 w-full bg-primary shadow-sm border border-border rounded z-50 flex flex-col p-2 gap-2 2xl:left-1/2 2xl:-translate-x-1/2'>
+                    {isCategoriesOpen ? <div className='absolute top-full right-2 translate-y-1 w-full bg-primary shadow-sm border border-border rounded z-50 flex flex-col p-2 gap-2 2xl:left-1/2 2xl:-translate-x-1/2' ref={categoriesRef}>
                        {CATEGORIES.map((item) => <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
                         hover:bg-primary hover:shadow-sm hover:rounded-sm flex items-center gap-1' key={item.id} onClick={() => {
                           setValue("category", item.slug as CategoryEnum)
@@ -196,7 +203,7 @@ const NewProduct = () => {
                             </div>
                             <FaChevronDown className="text-accent-gray" />
                         </div>
-                    {isSubCategoriesOpen ? <div className='absolute top-full right-2 translate-y-1 w-full bg-primary shadow-sm border border-border rounded z-50 flex flex-col p-2 gap-2 2xl:left-1/2 2xl:-translate-x-1/2 max-h-56 overflow-y-scroll'>
+                    {isSubCategoriesOpen ? <div className='absolute top-full right-2 translate-y-1 w-full bg-primary shadow-sm border border-border rounded z-50 flex flex-col p-2 gap-2 2xl:left-1/2 2xl:-translate-x-1/2 max-h-56 overflow-y-scroll' ref={subCategoriesRef}>
                         {SUBCATEGORIES.map((item) => <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
                         hover:bg-primary hover:shadow-sm hover:rounded-sm flex items-center gap-1' key={item.id} onClick={() => {
                           setValue("subCategory", item.slug as SubcategoryEnum)

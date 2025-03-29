@@ -14,7 +14,12 @@ const Cart = () => {
 
   return (
     <div>
-        <FaCartShopping className="text-2xl text-accent-teal cursor-pointer" onClick={() => setIsOpen(true)}/>
+        <div onClick={() => setIsOpen(true)} className='relative cursor-pointer mr-2'>
+          <FaCartShopping className="text-2xl text-accent-teal" />
+          {items.length > 0 ? <div className='w-[1.1rem] h-[1.1rem] bg-primary rounded-full flex items-center justify-center absolute -bottom-2.5 -right-2.5'>
+            <p className='text-xs font-semibold'>{items.length}</p>
+          </div> : null}
+        </div>
         { <div className={`fixed top-0 w-full max-w-80 lg:w-96 h-screen z-[1000] bg-primary border-l border-l-accent-lightgray flex flex-col px-2 py-3 duration-150 ease-in-out 
             ${isOpen ? ' right-0 w-80 lg:w-96' : '-right-[100%] w-0 md:w-0'}`}>
            <div className='w-full flex items-center justify-between border-b pb-1 border-b-accent-lightgray/75'>
@@ -33,7 +38,12 @@ const Cart = () => {
                     <p className='text-sm text-accent-gray/75'>by {product.author}</p>
                   </div>
                </div>)}
+               {items.length === 0 ? <div className='flex-1 p-2 flex flex-col gap-1 overflow-y-auto items-center justify-center'>
+                  <FaCartShopping className='text-8xl text-accent-lightgray/90'/>
+                  <p className='text-3xl text-accent-lightgray/90 font-semibold font-smooch'>Your cart is empty!</p>
+                </div> : null}
             </div>
+
            <div className='mt-auto w-full flex flex-col gap-2 border-t pt-1 border-t-accent-lightgray/75'>
               <div className='w-full flex items-center justify-between'>
                 <p >Total Items</p>

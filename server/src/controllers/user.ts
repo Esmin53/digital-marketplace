@@ -153,3 +153,22 @@ export const getStatistics = async (req: Request, res: Response) => {
         console.log(error)
     }
 }
+
+export const getUserProductsLite = async (req: Request, res: Response) => {
+  try {
+
+      const { userId } = req.params
+
+      const idAsObjectId = new mongoose.Types.ObjectId(userId)
+
+      const products = await User.findById(idAsObjectId).select('purchasedProducts')
+
+      console.log("Products", products, userId)
+
+      res.status(200).json({success: true, products: products?.purchasedProducts});
+            
+  } catch (error) {
+      console.error(error);
+      res.status(500).send({success: false, message: "Something went wrong. Please try again."});
+  }
+}

@@ -42,7 +42,7 @@ const Card = ({_id, images, title, author, price, averageRating}: CardProps) => 
             <img src={images[0]} className="w-full h-full object-cover z-10"/>
         </div>
         <div className=" w-full px-2 py-0.5 text-[#1d2529] flex flex-col cursor-pointer -space-y-1" onClick={() => navigate(`/products/${_id}`)}>
-            <h1 className="text-lg">{title}</h1>
+            <h1 className="text-lg line-clamp-1">{title}</h1>
             <div className="flex items-center justify-between w-full flex-wrap">
                 <p className="font-medium">{author.username}</p>
                 <div className="flex items-center">

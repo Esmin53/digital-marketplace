@@ -11,6 +11,8 @@ import SkeletonProductDetail from "../components/SkeletonProductDetail"
 import { useClickOutside } from "../hooks/useOnClickOutside"
 import Ratings from "../components/Ratings"
 import MaxWidthWrapper from "../components/MaxWidthWrapper"
+import { useAuthStore } from "../store/useAuthStore"
+import AddToCartButton from "../components/AddToCartButton"
 
 const ProductDetail = () => {
   const [isLoading, setIsLoading] = useState<boolean >(true)
@@ -35,7 +37,7 @@ const ProductDetail = () => {
   const { id } = useParams()
 
   const productId = useLocation().pathname.split('/')[2]
-  const {addItem, items} = useCart()
+  const {currentUser} = useAuthStore()
 
   const ref = useRef<HTMLDivElement>(null)
   useClickOutside(ref, () => {
@@ -48,8 +50,6 @@ const ProductDetail = () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products/${productId}`)
 
-
-      console.log("Price Id: ", response.data.product.authorId.purchasedProducts)
       setData(response.data.product)
   
     } catch (error) {
@@ -105,34 +105,11 @@ const ProductDetail = () => {
               <p className="text-4xl md:text-5xl font-bold font-smooch">
                 $ {data?.price.toFixed(2)}
               </p>
-              <Ratings initialAverageRating={data.averageRating} productId={data._id}/>
+              {currentUser?.user.id !== data?.authorId._id ? <Ratings initialAverageRating={data.averageRating} productId={data._id}/> : null}
               <p className="text-sm sm:text-base pb-4">{data?.description}</p>
-              {
-              items.some(item => item.product._id === data?._id) ? (
-                <div
-                  className="w-full max-w-96 rounded-md py-2 md:py-3 mt-auto mb-2 bg-button md:text-lg text-white hover:bg-button/95 flex items-center justify-center">
-                  In Cart
-                </div>
-              ) : (
-                <button
-                  className="w-full max-w-96 rounded-md py-2 md:py-3 mt-auto mb-2 bg-button md:text-lg text-white hover:bg-button/95"
-                  onClick={() =>
-                    addItem({
-                      _id: data?._id,
-                      title: data?.title,
-                      price: data?.price,
-                      image: data?.images[0],
-                      author: data?.authorId.username,
-                      price_id: data.price_id
-                    })
-                  }
-                >
-                  Add to cart
-                </button>
-              )}
+              {data ? <AddToCartButton _id={data?._id} title={data?.title} price={data?.price} image={data?.images[0]} authorId={data.authorId} price_id={data.price_id}/> : null}
             </div>
         </div>}
-        {/* Replace mock data with real related products */}
           <SimilarProducts subCategory={data.subCategory} _id={data._id}/>
         </div>
       </div>

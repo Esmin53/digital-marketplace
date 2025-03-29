@@ -2,13 +2,14 @@ import Card from './Card'
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { IoChevronUp } from "react-icons/io5";
 import { HiMiniArrowRight } from "react-icons/hi2";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CATEGORIES } from '../lib/data';
 import axios from "axios"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Link } from 'react-router-dom';
 import SkeletonCard from './SkeletonCard';
+import { useOnClickOutside } from '../lib/utils';
 
 const BestRated = () => {
     const [isOpen, setIsOpen]  = useState<boolean >(false)
@@ -29,6 +30,9 @@ const BestRated = () => {
         images: string[]
         averageRating: number
       }[]>([])
+
+          const modalRef = useRef<HTMLDivElement>(null);
+          useOnClickOutside(modalRef, () => setIsOpen(false));
 
       const responsive = {
         superLargeDesktop: {
@@ -89,7 +93,7 @@ const BestRated = () => {
                     </button>
                     {isOpen ? <div className='absolute top-full right-2 translate-y-1 w-52 bg-secondary shadow-sm border border-border rounded z-50 flex flex-col p-2 gap-2'>
                         {CATEGORIES.map((item) => <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
-                        hover:bg-primary hover:shadow-sm hover:rounded-sm' key={item.id} onClick={() => {
+                        hover:bg-primary hover:shadow-sm hover:rounded-sm' key={item.id} ref={modalRef} onClick={() => {
                             setCategory(item)
                             setIsOpen(false)
                         }}>{item.name}</p>)}
