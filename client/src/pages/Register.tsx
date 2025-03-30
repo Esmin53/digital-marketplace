@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import {userValidator, UserType} from "../../../shared/validators/auth"
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import { Toaster, toast } from "sonner";
 import { useAuthStore } from "../store/useAuthStore";
 import { LuLoaderCircle } from "react-icons/lu";
@@ -42,19 +42,31 @@ const Register = () => {
                 toast.success("You have registered successfully. You will be redirected to login.")
                 navigate("/login")
             }
-        } catch (error: AxiosError | any) {
-            setIsLoading(false)
-            console.log("Error: ", error)
-            if(error.response.status === 409) {
+        } catch (error: unknown) {
+            setIsLoading(false);
+            console.error("Error:", error); // Better to use console.error for errors
+            
+            if (axios.isAxiosError(error)) {
+              // TypeScript now knows this is an AxiosError
+              if (error.response?.status === 409) {
                 setError("username", {
-                 type: "manual",
-                 message: "That username is already taken. Please try a different one."
-                })
-                toast.error("That username is already taken. Please try a different one.")
+                  type: "manual",
+                  message: "That username is already taken. Please try a different one."
+                });
+                toast.error("That username is already taken. Please try a different one.");
+              } else {
+                toast.error("Something went wrong. Please try again later");
+              }
+            } else if (error instanceof Error) {
+              // Handle non-Axios errors
+              console.error("Unexpected error:", error.message);
+              toast.error("An unexpected error occurred");
             } else {
-                toast.error("Something went wrong. Please try again later")
+              // Handle cases where error isn't an Error object
+              console.error("Unknown error type:", error);
+              toast.error("An unknown error occurred");
             }
-        }
+          }
     }
 
     useEffect(() => {

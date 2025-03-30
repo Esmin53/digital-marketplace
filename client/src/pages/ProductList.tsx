@@ -23,8 +23,8 @@ const ProductList = () => {
   const [category, setCategory] = useState<string | null>(initialCategory)
   const [subCategory, setSubCategory] = useState<string | null>(initialSubCategory)
   const [orderBy, setOrderBy] = useState<string>("title-desc")
-  let [page, setPage] = useState<number >(1)
-  let [totalResults, setTotalResults] = useState<number >(0)
+  const [page, setPage] = useState<number >(1)
+  const [totalResults, setTotalResults] = useState<number >(0)
   const [data, setData] = useState<{
     price: number
     _id: string
@@ -46,7 +46,7 @@ const ProductList = () => {
       setData(response.data.products)
       setTotalResults(response.data.totalResults)
      } catch (error) {
-      
+        console.log(error)
      } finally {
        setIsLoading(false)
      }
@@ -59,8 +59,6 @@ const ProductList = () => {
   useEffect(() => {
     getProducts()
   }, [subCategory, orderBy, page, category])
-
-  console.log("Page Number: ", page)
 
   return (
     <div className='h-screen flex flex-col text-text font-rubik'>

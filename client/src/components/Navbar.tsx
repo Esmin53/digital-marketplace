@@ -8,7 +8,7 @@ import { useOnClickOutside } from "../lib/utils";
 
 const Navbar = () => {
 
-    let { currentUser, signOut } = useAuthStore()
+    const { currentUser, signOut } = useAuthStore()
     const navigate = useNavigate()
 
     const [isOpen, setIsOpen] = useState<boolean >(false)

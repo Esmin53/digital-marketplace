@@ -55,7 +55,7 @@ const Popular = () => {
 
         setData(response.data.products)
       } catch (error) {
-        
+          console.error(error)
       } finally {
         setIsLoading(false)
       }

@@ -20,7 +20,7 @@ type CategoryEnum = typeof CATEGORIES_ENUM[number]
 type SubcategoryEnum = typeof SUBCATEGORIES_ENUM[number]
 
 const SUBCATEGORIES = CATEGORIES.map((item) => {
-    let temp = item.subcategories.map((item) => item)
+    const temp = item.subcategories.map((item) => item)
 
     return temp
 }).flat()
@@ -44,7 +44,7 @@ const NewProduct = () => {
     useOnClickOutside(subCategoriesRef, () => setIsSubCategoriesOpen(false));
 
     const removePreviewImage = (index: number) => {
-        setImages(prev => prev.filter((item, i) => i !== index))
+        setImages(prev => prev.filter((_, i) => i !== index))
     }
 
         const {
@@ -77,14 +77,13 @@ const NewProduct = () => {
         setIsLoading(true)
         try {
           
-          let cover_images = await uploadFiles(images, 'images')
-          let files = await uploadFiles(file, 'files')
+          const cover_images = await uploadFiles(images, 'images')
+          const files = await uploadFiles(file, 'files')
 
           if(cover_images === null || cover_images.length === 0 || files === null || files.length === 0) {
             toast.error('There was an error uploading your files! Please check your internet connection and try again!')
             return
           }
-          console.log(title, description, price, category, subCategory, files, cover_images)
           
           const response = await axios.post(`${import.meta.env.VITE_SERVER_URL}/product/new-product`, {
             title,
@@ -184,7 +183,7 @@ const NewProduct = () => {
                        {CATEGORIES.map((item) => <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
                         hover:bg-primary hover:shadow-sm hover:rounded-sm flex items-center gap-1' key={item.id} onClick={() => {
                           setValue("category", item.slug as CategoryEnum)
-                          setIsCategoriesOpen(prev => false)
+                          setIsCategoriesOpen(false)
                           }}>
                           {item.name}
                           {watch("category") === item.slug ? <FaCheckDouble /> : null}
@@ -207,7 +206,7 @@ const NewProduct = () => {
                         {SUBCATEGORIES.map((item) => <p className='text-sm text-gray-600 p-2 cursor-pointer font-medium 
                         hover:bg-primary hover:shadow-sm hover:rounded-sm flex items-center gap-1' key={item.id} onClick={() => {
                           setValue("subCategory", item.slug as SubcategoryEnum)
-                            setIsSubCategoriesOpen(prev => false)
+                            setIsSubCategoriesOpen(false)
                           }}>   {item.name}
                           {watch("subCategory") === item.slug ? <FaCheckDouble /> : null}
                         </p>)}
@@ -223,7 +222,7 @@ const NewProduct = () => {
               <input id='file_input'className='hidden'
               type='file' multiple={false} onChange={((e) => {
                 if (e.target.files && e.target.files[0]) {
-                    //@ts-ignore
+                    //@ts-expect-error - Temporarily ignoring type check while I figure out why is happening
                     setFile(prev => [...prev, e.target.files[0]]);
                   }
 
@@ -239,7 +238,7 @@ const NewProduct = () => {
               <input id='image_input'className='hidden'
               type='file' onChange={((e) => {
                 if (e.target.files && e.target.files[0]) {
-                    //@ts-ignore
+                    //@ts-expect-error - Temporarily ignoring type check while I figure out why is happening
                     setImages(prev => [...prev, e.target.files[0]]);
                   }
 
@@ -257,7 +256,7 @@ const NewProduct = () => {
                         <p className="text-sm text-accent-gray">Click on a file to remove it</p>
                         {file.length > 0 ? <div className="px-2">
                             {file.map((item, i) => <div key={`${item.name}${i}`}>
-                                <p className="text-accent-gray cursor-pointer" onClick={() => setFile(prev => prev.filter((item, index) => index !== i))}>{item.name}</p>
+                                <p className="text-accent-gray cursor-pointer" onClick={() => setFile(prev => prev.filter((_, index) => index !== i))}>{item.name}</p>
                             </div>)}
                         </div> : <div className="w-full flex flex-col items-center justify-center py-4 px-4 gap-2">
                                 <FaFileExcel className="text-4xl text-accent-lightgray" />

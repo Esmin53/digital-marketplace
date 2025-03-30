@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom"
+import { Link, useParams, useSearchParams } from "react-router-dom"
 import Footer from "../components/Footer"
 import MaxWidthWrapper from "../components/MaxWidthWrapper"
 import Navbar from "../components/Navbar"
@@ -23,7 +23,6 @@ const Orders = () => {
 
     const { id } = useParams()
     const {currentUser} = useAuthStore()
-    //const navigate = useNavigate()
 
     const getOrders = async () => {
       setIsLoading(true)
@@ -69,12 +68,14 @@ const Orders = () => {
           <p>Here is a summary of your purchases so far:</p>
           <div className="w-full h-[0.75px] bg-accent-lightgray/60 shadow-sm mb-2" />
             {orders.map((item) => <div key={item._id} className="-space-y-1 cursor-pointer hover:bg-accent-lightgray/10 p-1 rounded-sm hover:shadow-sm" onClick={() => {
-              setOrderId(item._id)
-              let element = document.getElementById('order-summary');
-              element && element.scrollIntoView({
-                behavior: 'smooth', 
-                block: 'start'     
-              });
+              setOrderId(item._id);
+              const element = document.getElementById('order-summary');
+              if (element) {
+                element.scrollIntoView({
+                  behavior: 'smooth',
+                  block: 'start'
+                });
+              }
             }}>
                 <p className="text-sm text-accent-gray/60">{format(item.createdAt, 'dd.MM.yyyy')}</p>
                 <h1 className="text-lg">{item._id}</h1>

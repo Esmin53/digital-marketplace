@@ -53,7 +53,7 @@ const UsersProducts = () => {
             .storage
             .from('e-book-marketplace')
             .download(filePath);
-            //@ts-ignore
+            //@ts-expect-error - Temporarily ignoring type check while I figure out wth is happening
           zip.file(filePath.split('/').pop(), data);
         });
       

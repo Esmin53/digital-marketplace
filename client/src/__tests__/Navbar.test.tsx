@@ -2,8 +2,12 @@ import '@testing-library/jest-dom'
 
 import { render, screen } from '@testing-library/react';
 import Navbar from '../components/Navbar';
+import { ReactNode } from 'react';
 
-jest.mock('../components/MaxWidthWrapper', () => ({ children, className }: any) => (
+jest.mock('../components/MaxWidthWrapper', () => ({ children, className }: {
+  children: ReactNode,
+  className?: string
+}) => (
   <div data-testid="max-width-wrapper" className={className}>{children}</div>
 ));
 

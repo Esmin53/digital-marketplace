@@ -33,14 +33,14 @@ const Manage = () => {
         category: string
         subCategory: string
       } | null>(null)
-      const [isLoading, setIsLoading] = useState<boolean >(false)
+      //const [isLoading, setIsLoading] = useState<boolean >(false)
       const [title, setTitle] = useState<string | null >(null)
       const [price, setPrice] = useState<number | null >(null)
       const [description, setDescription] = useState<string | null >(null)
       const [isUpdating, setIsUpdating] = useState<boolean >(false)
 
       const getProducts = async () => {
-        setIsLoading(true)
+        //setIsLoading(true)
         try {
           const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products/${id}`)
     
@@ -54,10 +54,10 @@ const Manage = () => {
           }
       
         } catch (error) {
-          
-        } finally {
-          setIsLoading(false)
-        }
+          console.error(error)
+        } /*finally {
+          //setIsLoading(false)
+        }*/
       }
 
       const updateProduct = async () => {
@@ -94,13 +94,13 @@ const Manage = () => {
         }
       }
 
-      const updatePrice = async () => {
+      /*const updatePrice = async () => {
         try {
           
         } catch (error) {
           
         }
-      }
+      }*/
 
       const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;

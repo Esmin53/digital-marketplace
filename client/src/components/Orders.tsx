@@ -11,7 +11,7 @@ const Orders = () => {
     createdAt: Date
     totalAmount: number
   }[]>([])
-  let [page, setPage] = useState(1)
+  const [page, setPage] = useState(1)
   const isInitialLoad = useRef(true);
 
     const {currentUser} = useAuthStore()
@@ -59,9 +59,9 @@ const Orders = () => {
                 <p className="">Order total: {totalAmount.toFixed(2)} $</p>
             </div>)}
         </div>
-        {true ? <div className="w-full flex items-center justify-center py-1">
+         <div className="w-full flex items-center justify-center py-1">
             <button className="text-sky-500 mx-auto text-lg" onClick={() => getOrders(page + 1)}>Load more</button>
-        </div> : null}
+        </div> 
     </div>
   )
 }

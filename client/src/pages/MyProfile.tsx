@@ -10,12 +10,8 @@ import Stats from '../components/Stats'
 import UploadedProducts from '../components/UploadedProducts'
 
 const MyProfile = () => {
-    let { currentUser } = useAuthStore()
+    const { currentUser } = useAuthStore()
     const navigate = useNavigate()
-
-  console.log("CurrentUser: ", currentUser)
-
-
 
     useEffect(() => {
       if(!currentUser) {

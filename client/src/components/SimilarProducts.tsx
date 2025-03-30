@@ -60,7 +60,7 @@ const SimilarProducts = ({subCategory, _id}: SimilarProductsProps) => {
     
           setData(response.data.products.filter((item: {_id: string}) => item._id !== _id))
         } catch (error) {
-          
+          console.error(error)
         } finally {
           setIsLoading(false)
         }

@@ -10,6 +10,7 @@ import "react-multi-carousel/lib/styles.css";
 import { Link } from 'react-router-dom';
 import SkeletonCard from './SkeletonCard';
 import { useOnClickOutside } from '../lib/utils';
+import { toast } from 'sonner';
 
 const BestRated = () => {
     const [isOpen, setIsOpen]  = useState<boolean >(false)
@@ -70,7 +71,8 @@ const BestRated = () => {
     
           setData(response.data.products)
         } catch (error) {
-          
+          console.error(error)
+          toast.error("Something went wrong. Please try again!")
         } finally {
           setIsLoading(false)
         }

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { useAuthStore } from "../store/useAuthStore"
 import { toast } from "sonner"
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import { LuLoaderCircle } from "react-icons/lu";
 
 const Login = () => {
@@ -39,12 +39,16 @@ const Login = () => {
             })
 
 
-        } catch (error: AxiosError | any) {
-            setIsLoading(false)
-            if(error.response.status === 404 || error.response.status === 400) {
-                toast.error("Incorrect username or password! Please try again.")
+        } catch (error: unknown) {
+            setIsLoading(false);
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 404 || error.response?.status === 400) {
+                    toast.error("Incorrect username or password! Please try again.");
+                } else {
+                    toast.error("Something went wrong. Please try again later.");
+                }
             } else {
-                toast.error("Something went wrong. Please try again later.")
+                toast.error("An unexpected error occurred.");
             }
         }
     }

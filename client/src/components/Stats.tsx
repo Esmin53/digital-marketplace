@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, Rectangle, PieChart, Pie, AreaChart, Area, CartesianGrid, Cell } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, PieChart, Pie, AreaChart, Area, CartesianGrid, Cell } from 'recharts';
 import { useAuthStore } from '../store/useAuthStore';
 import { useEffect, useState } from 'react';
 
@@ -22,7 +22,7 @@ const Stats = () => {
             setData(response.data.data)
             setAllMonths(response.data.allMonths)
         } catch (error) {
-            
+            console.error(error)
         }
     }
 
@@ -95,7 +95,7 @@ const Stats = () => {
                             label
                             name="Total Earnings"                      
                         >                  
-                              {allMonths.map((entry, index) => (
+                              {allMonths.map((_, index) => (
                                 <Cell 
                                 key={`cell-${index}`} 
                                 fill={COLORS[index % COLORS.length]}                              

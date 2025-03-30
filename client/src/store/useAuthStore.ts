@@ -20,7 +20,7 @@ export const useAuthStore = create<authUserState>()(
         (set) => ({
             currentUser: null,
             signIn: (user) => 
-                set((state) => {
+                set(() => {
                     return { currentUser: {
                         user: {
                             username: user.username,

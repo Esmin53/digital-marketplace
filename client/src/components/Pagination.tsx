@@ -12,7 +12,7 @@ interface PaginationProps {
 const Pagination = ({ totalResults, currentPage, setPage }: PaginationProps) => {
 
 
-    let totalPages = Math.ceil(totalResults / 20)
+    const totalPages = Math.ceil(totalResults / 20)
 
     const handlePage = (pageNum: number) => {
         if(pageNum === 0) {

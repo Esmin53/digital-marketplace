@@ -22,7 +22,7 @@ export async function uploadFile(file: File, folder: string) {
     }
   
     console.log('File uploaded:', data);
-    let fullUrl = `https://ziilfxkhmjlollmbngum.supabase.co/storage/v1/object/public/${data.fullPath}`
+    const fullUrl = `https://ziilfxkhmjlollmbngum.supabase.co/storage/v1/object/public/${data.fullPath}`
     return fullUrl
   }
 

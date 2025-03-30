@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 
 
 const UploadedProducts = () => {
-    let { currentUser } = useAuthStore()
+    const { currentUser } = useAuthStore()
 
     const [products, setProducts] = useState<{
         price: number

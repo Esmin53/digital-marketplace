@@ -6,7 +6,6 @@ import { Link, useLocation, useParams } from "react-router-dom"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import SimilarProducts from "../components/SimilarProducts"
-import { useCart } from "../store/useCart"
 import SkeletonProductDetail from "../components/SkeletonProductDetail"
 import { useClickOutside } from "../hooks/useOnClickOutside"
 import Ratings from "../components/Ratings"
@@ -53,7 +52,7 @@ const ProductDetail = () => {
       setData(response.data.product)
   
     } catch (error) {
-      
+      console.error(error)
     } finally {
       setIsLoading(false)
     }
