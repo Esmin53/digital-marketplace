@@ -4,7 +4,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --watch server --watch shared --exec ts-node -r tsconfig-paths/register server/src/server.ts"
+    "start": "node server/dist/server.js", 
+    "build": "npm run build:server && npm run build:client",
+    "build:server": "tsc --project server/tsconfig.json",
+    "build:client": "cd client && npm run build",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "nodemon --watch server --watch shared --exec ts-node -r tsconfig-paths/register server/src/server.ts",
+    "dev:client": "cd client && npm run dev",
+    "preview": "node server/dist/server.js" 
   },
   "repository": {
     "type": "git",
