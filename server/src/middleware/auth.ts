@@ -11,7 +11,7 @@ export const verifyToken = async (req: Request, res: Response, next: NextFunctio
 
         const token = authHeader.split(" ")[1]
 
-        jwt.verify(token, process.env.JWT_SECRET!, (err, data) => {
+        jwt.verify(token, process.env.JWT_SECRET!, (err: Error | null, data: string | jwt.JwtPayload | undefined) => {
             if (err) {
                  return res.status(401).json({err})
             }

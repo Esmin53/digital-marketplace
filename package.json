@@ -4,14 +4,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server/dist/server.js", 
+    "start": "node server/dist/server.js",
     "build": "npm run build:server && npm run build:client",
     "build:server": "tsc --project tsconfig.json",
     "build:client": "cd client && npm run build",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "dev:server": "nodemon --watch server --watch shared --exec ts-node -r tsconfig-paths/register server/src/server.ts",
     "dev:client": "cd client && npm run dev",
-    "preview": "node server/dist/server.js" 
+    "preview": "node server/dist/server.js"
   },
   "repository": {
     "type": "git",
@@ -27,10 +27,12 @@
   "description": "",
   "dependencies": {
     "@stripe/stripe-js": "^6.0.0",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.6",
     "stripe": "^17.7.0",
     "ts-node": "^10.9.2",

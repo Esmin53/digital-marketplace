@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { userValidator } from "@shared/validators/auth";
 import User from 'server/src/models/User';
 import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
+import jwt, { JwtPayload } from "jsonwebtoken"
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -67,7 +67,7 @@ export const login = async (req: Request, res: Response) => {
             payload,
             process.env.JWT_SECRET!,
             {expiresIn: "30d"},
-            (err, token) => {
+            (err: Error | null, token: string | undefined) => {
                 if (err) throw err;
                     res.status(200).json({ 
                     token: token,
@@ -76,7 +76,6 @@ export const login = async (req: Request, res: Response) => {
                     role: user.role
                 });
               }
-
         )
     } catch (error) {
         console.error(error);
