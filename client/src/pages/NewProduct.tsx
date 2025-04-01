@@ -5,13 +5,13 @@ import { useAuthStore } from "../store/useAuthStore"
 import { Link, useNavigate } from "react-router-dom"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {ProductValidator, TProductValidator} from "../../../shared/validators/product"
+import {ProductValidator, TProductValidator} from "../lib/validators/product"
 import { FaCheckDouble, FaChevronDown, FaFileExcel, FaFileImage, FaTrash  } from "react-icons/fa6";
 import { CATEGORIES } from "../lib/data"
 import { uploadFiles } from "../lib/supabaseClient"
 import {Toaster, toast} from "sonner"
 import MaxWidthWrapper from "../components/MaxWidthWrapper"
-import { CATEGORIES_ENUM, SUBCATEGORIES_ENUM } from "../../../shared/constants/enums";
+import { CATEGORIES_ENUM, SUBCATEGORIES_ENUM } from "../lib/data";
 import { LuLoaderCircle } from "react-icons/lu"
 import axios from "axios"
 import { useOnClickOutside } from "../lib/utils"
