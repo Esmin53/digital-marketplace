@@ -4,14 +4,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server/dist/server.js",
-    "build": "npm run build:server && npm run build:client",
-    "build:server": "tsc -p tsconfig.json --outDir server/dist",
-    "build:client": "cd client && npm run build",
+    "start": "node dist/server.js",
+    "build": "tsc -p tsconfig.json --outDir dist",
     "dev": "nodemon --watch server --watch shared --exec ts-node -r tsconfig-paths/register src/server.ts",
-    "dev:server": "nodemon --watch server --watch shared --exec ts-node -r tsconfig-paths/register server/src/server.ts",
-    "dev:client": "cd client && npm run dev",
-    "preview": "node server/dist/server.js"
+    "preview": "node dist/server.js"
   },
   "repository": {
     "type": "git",

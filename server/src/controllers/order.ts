@@ -1,4 +1,4 @@
-import { stripe } from "@shared/lib/stripe"
+import { stripe } from "../lib/stripe"
 import { Request, Response } from "express"
 import { Types } from "mongoose"
 import Stripe from "stripe"

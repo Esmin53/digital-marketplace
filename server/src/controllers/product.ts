@@ -1,10 +1,10 @@
-import { ProductValidator } from "@shared/validators/product";
+import { ProductValidator } from "../lib/validators/product";
 import { Request, Response } from "express"
 import Product from "../models/Product";
-import { stripe } from "@shared/lib/stripe";
+import { stripe } from "../lib/stripe";
 import User from "../models/User";
 import Order from "../models/Order";
-import mongoose, { Mongoose } from "mongoose";
+import mongoose from "mongoose";
 import { format } from "date-fns";
 
 export const newProduct = async (req: Request, res: Response) => {

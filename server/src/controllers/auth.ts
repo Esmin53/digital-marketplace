@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { userValidator } from "@shared/validators/auth";
+import { userValidator } from "src/lib/validators/auth";
 import bcrypt from "bcrypt"
-import jwt, { JwtPayload } from "jsonwebtoken"
-import User from 'src/models/User';
+import jwt from "jsonwebtoken"
+import User from '../models/User';
 
 export const register = async (req: Request, res: Response) => {
     try {
