@@ -1,4 +1,4 @@
-import { CATEGORIES_ENUM, SUBCATEGORIES_ENUM } from '@shared/constants/enums';
+import { CATEGORIES_ENUM, SUBCATEGORIES_ENUM } from '../lib/enums';
 import mongoose, { Schema, Document, Types } from 'mongoose';
 
 interface IProduct extends Document {
