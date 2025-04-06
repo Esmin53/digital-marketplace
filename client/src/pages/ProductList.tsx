@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Footer from "../components/Footer"
 import MaxWidthWrapper from "../components/MaxWidthWrapper"
 import Navbar from "../components/Navbar"
@@ -11,6 +11,7 @@ import axios from "axios"
 import Pagination from "../components/Pagination"
 import { SiGhostery } from "react-icons/si";
 import SkeletonCard from "../components/SkeletonCard"
+import { useOnClickOutside } from "../lib/utils"
 
 
 const ProductList = () => {
@@ -38,6 +39,9 @@ const ProductList = () => {
   }[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const limit = 16
+
+  const modalRef = useRef<HTMLDivElement>(null);
+  useOnClickOutside(modalRef, () => setIsOpen(false));
 
   const getProducts = async () => {
     setIsLoading(true)
@@ -79,7 +83,7 @@ const ProductList = () => {
             <h2 className="font-playwrite text-xs sm:text-xl font-semibold text-white ">Top Quality Digital Assets On Your Fingertips.</h2>
           </div>
         </MaxWidthWrapper>
-        <div className="w-full h-full max-w-7xl flex relative">
+        <div className="w-full h-full max-w-7xl flex relative" ref={modalRef}>
             <div className={`md:w-60 lg:w-72 h-full flex flex-col py-2 top-0 fixed sm:relative z-40 overflow-hidden duration-150 ease-in-out lg:-translate-x-0 px-1
               ${filtersOpen ? ' -translate-x-0 w-60' : '-translate-x-[100%] w-0 md:w-0'} border-r border-accent-lightgray shadow bg-primary left-0`}>
                 <div className="flex items-center justify-between">
@@ -88,7 +92,7 @@ const ProductList = () => {
                     <FaArrowLeft />
                   </div>
                 </div>
-                {CATEGORIES.map((item) => <div key={item.id} className="flex flex-col">
+                {CATEGORIES.map((item) => <div key={item.id} className="flex flex-col" >
                     <h3 className={`font-medium cursor-pointer ${category === item.slug ? "border-b border-accent-teal-300 w-fit" : ""}`} onClick={(() => {
                       setCategory(prev => prev !== item.slug ? item.slug : null)
                       setSubCategory(null)
@@ -110,7 +114,7 @@ const ProductList = () => {
                   <div className="text-2xl cursor-pointer flex lg:hidden" onClick={() => setFiltersOpen(prev => !prev)}>
                     {filtersOpen ? <FaFilterCircleXmark /> : <FaFilter />}
                   </div>
-                  <p className="mr-auto">Showing {(page-1)*limit + 1}-{totalResults < limit ? page * limit : totalResults < limit * page ? totalResults : page*limit} out of {totalResults}</p>
+                  {!isLoading && totalResults !== 0 ? <p className="mr-auto">Showing {(page-1)*limit + 1}-{totalResults < limit ? totalResults : totalResults < limit * page ? totalResults : page*limit} out of {totalResults}</p> : <p className="mr-auto">Showing 0-0 out of 0</p>}
 
                   <div className='relative ml-auto flex-1'>
                       <button className='px-2 font-smooch text-xl font-semibold flex items-center justify-center gap-1 ml-auto' onClick={() => setIsOpen(prev => !prev)}>
