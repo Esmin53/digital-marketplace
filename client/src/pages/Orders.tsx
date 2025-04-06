@@ -7,6 +7,7 @@ import axios from "axios"
 import { useAuthStore } from "../store/useAuthStore"
 import { format } from 'date-fns';
 import OrderSummary from "../components/OrderSummary"
+import { useCart } from "../store/useCart"
 
 const Orders = () => {
   const [isLoading, setIsLoading] = useState<boolean >(false)
@@ -18,6 +19,9 @@ const Orders = () => {
 
   const [searchParams] = useSearchParams();
   const initialOrderId = searchParams.get("orderId") || null;
+  const origin = searchParams.get('origin') || null
+
+  const {clearCart} = useCart()
 
   const [orderId, setOrderId] = useState<string | null>(initialOrderId)
 
@@ -35,7 +39,6 @@ const Orders = () => {
 
           setOrders(response.data.orders)
           if(response.data.orders.length > 0 && !initialOrderId) setOrderId(response.data.orders[0]._id)
-          console.log("Response: ", response.data)
       } catch (error) {
         console.log("Error: ", error)
       } finally {
@@ -44,6 +47,10 @@ const Orders = () => {
     }
 
     useEffect(() => {
+      if (origin && origin  === 'payment-succeeded') {
+        clearCart()
+    } 
+
       getOrders()
     }, [])
 

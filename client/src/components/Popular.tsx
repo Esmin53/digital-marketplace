@@ -75,11 +75,11 @@ const Popular = () => {
             {isLoading ? <Carousel className='py-6 lg:py-10'
             responsive={responsive}
             showDots={true}>
-              <SkeletonCard className='px-2' />
-              <SkeletonCard className='px-2' />
-              <SkeletonCard className='px-2' />
-              <SkeletonCard className='px-2' />
-              <SkeletonCard className='px-2' />
+              <SkeletonCard className='px-2' color='bg-primary/75'/>
+              <SkeletonCard className='px-2' color='bg-primary/75'/>
+              <SkeletonCard className='px-2' color='bg-primary/75'/>
+              <SkeletonCard className='px-2' color='bg-primary/75'/>
+              <SkeletonCard className='px-2' color='bg-primary/75'/>
             </Carousel> : null}
             {data.length && !isLoading ? <Carousel 
             className='py-6 lg:py-10'

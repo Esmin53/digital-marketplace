@@ -37,11 +37,12 @@ const ProductList = () => {
     averageRating: number
   }[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const limit = 16
 
   const getProducts = async () => {
     setIsLoading(true)
      try {
-      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products?$limit=20&${subCategory !== null ? `subCategory=${subCategory}` : ""}&orderBy=${orderBy}&limit=20&page=${page}&${category !== null ? `category=${category}` : ""}`)
+      const response = await axios.get(`${import.meta.env.VITE_SERVER_URL}/product/get-products?limit=${limit}&${subCategory !== null ? `subCategory=${subCategory}` : ""}&orderBy=${orderBy}&page=${page}&${category !== null ? `category=${category}` : ""}`)
 
       setData(response.data.products)
       setTotalResults(response.data.totalResults)
@@ -109,7 +110,7 @@ const ProductList = () => {
                   <div className="text-2xl cursor-pointer flex lg:hidden" onClick={() => setFiltersOpen(prev => !prev)}>
                     {filtersOpen ? <FaFilterCircleXmark /> : <FaFilter />}
                   </div>
-                  <p className="mr-auto">Showing {(page-1)*20 + 1}-{totalResults > 20 ? page * 20 : totalResults} out of {totalResults}</p>
+                  <p className="mr-auto">Showing {(page-1)*limit + 1}-{totalResults < limit ? page * limit : totalResults < limit * page ? totalResults : page*limit} out of {totalResults}</p>
 
                   <div className='relative ml-auto flex-1'>
                       <button className='px-2 font-smooch text-xl font-semibold flex items-center justify-center gap-1 ml-auto' onClick={() => setIsOpen(prev => !prev)}>
@@ -164,7 +165,7 @@ const ProductList = () => {
                 <SiGhostery className="text-accent-gray/50 text-6xl" />
                 <p className="text-3xl sm:text-4xl text-accent-gray/70 font-smooch text-center">Nothing here... Try a different search!</p>
               </div> : null}
-              {totalResults !== 0 ? <Pagination currentPage={page} setPage={setPage} totalResults={totalResults} /> : null}
+              {totalResults !== 0 ? <Pagination currentPage={page} setPage={setPage} totalResults={totalResults} limit={limit}/> : null}
             </div>
   
         </div>

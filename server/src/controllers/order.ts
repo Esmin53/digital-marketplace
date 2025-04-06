@@ -38,7 +38,7 @@ export const payment = async (req: Request, res: Response) => {
         const orderId = new Types.ObjectId().toString();
 
         const stripeSession = await stripe.checkout.sessions.create({
-            success_url: `${process.env.SERVER_URL}/orders?orderId=${orderId}`,
+            success_url: `${process.env.SERVER_URL}/orders?orderId=${orderId}&origin=payment-succeeded`,
             cancel_url: `${process.env.SERVER_URL}/checkout`,
             payment_method_types: ["card"],
             client_reference_id: id,
@@ -138,6 +138,7 @@ export const webhookHandler = async (req: Request, res: Response) => {
             userId: id
           }).
           select('_id createdAt totalAmount').
+          sort({createdAt: "desc"}).
           limit(limit).
           skip((page-1) * limit)
   

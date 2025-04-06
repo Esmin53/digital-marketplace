@@ -6,13 +6,14 @@ import { LuDot } from "react-icons/lu";
 interface PaginationProps {
     totalResults: number,
     currentPage: number,
-    setPage: (pageNum: number) => void
+    setPage: (pageNum: number) => void,
+    limit: number
 }
 
-const Pagination = ({ totalResults, currentPage, setPage }: PaginationProps) => {
+const Pagination = ({ totalResults, currentPage, setPage, limit }: PaginationProps) => {
 
 
-    const totalPages = Math.ceil(totalResults / 20)
+    const totalPages = Math.ceil(totalResults / limit)
 
     const handlePage = (pageNum: number) => {
         if(pageNum === 0) {
